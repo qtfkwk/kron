@@ -138,3 +138,18 @@ class Test(unittest.TestCase):
         h = timestamp.timestamp(w)
         self.assertEqual(h.value, w)
         self.assertIsInstance(h.value, float)
+    def test_timestamp_str1(self):
+        h = timestamp.timestamp('2016-03-04 16:55:01', 'UTC')
+        w = 1457128501
+        self.assertEqual(h.value, w)
+        self.assertIsInstance(h.value, float)
+    def test_timestamp_str2(self):
+        h = timestamp.timestamp('2016-03-04 11:55:01', 'EST')
+        w = 1457128501
+        self.assertEqual(h.value, w)
+        self.assertIsInstance(h.value, float)
+    def test_timestamp_str3(self):
+        h = timestamp.timestamp('2016-03-04 17:55:01', 'Madrid')
+        w = 1457128501
+        self.assertEqual(h.value, w)
+        self.assertIsInstance(h.value, float)

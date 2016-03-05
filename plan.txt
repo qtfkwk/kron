@@ -27,10 +27,10 @@ x cmp
 x math
 
 timestamp
-/ init
+x init
   x default
   x int/float
-  _ str
+  x str
 _ cmp
 _ math
 _ str

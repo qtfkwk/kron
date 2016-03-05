@@ -72,10 +72,24 @@ class DurationMultiplyError(Exception):
     pass
 class DurationDivideError(Exception):
     pass
+class _bdict(dict):
+    def __missing__(self, key):
+        if key == None:
+            key = 'base'
+        return self[key] if key in self else key
 import time
+import datetime
 class timestamp(object):
-    def __init__(self, value=None):
+    _formats = _bdict(
+        base='%Y-%m-%d %H:%M:%S',
+    )
+    def __init__(self, value=None, tz=None, fmt=None):
         if value == None:
             self.value = time.time()
-        else:
+        elif isinstance(value, (int, float)):
             self.value = float(value)
+        else:
+            d = datetime.datetime.strptime(value, self._formats[fmt])
+            d = timezone(tz).pytz.localize(d)
+            self.value = time.mktime(d.utctimetuple())
+            self.value += d.microsecond / float(10**6)
