@@ -48,3 +48,27 @@ class duration(object):
     def __cmp__(self, y):
         if isinstance(y, duration):
             return cmp(self.value, y.value)
+    def __add__(self, y):
+        if isinstance(y, duration):
+            return duration(self.value + y.value)
+        elif isinstance(y, (int, float)):
+            return duration(self.value + y)
+    def __sub__(self, y):
+        if isinstance(y, duration):
+            return duration(self.value - y.value)
+        elif isinstance(y, (int, float)):
+            return duration(self.value - y)
+    def __mul__(self, y):
+        if isinstance(y, (int, float)):
+            return duration(self.value * y)
+        else:
+            raise DurationMultiplyError
+    def __div__(self, y):
+        if isinstance(y, (int, float)):
+            return duration(self.value / y)
+        else:
+            raise DurationDivideError
+class DurationMultiplyError(Exception):
+    pass
+class DurationDivideError(Exception):
+    pass

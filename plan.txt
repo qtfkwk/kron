@@ -24,7 +24,7 @@ x init
   x value
 x dict
 x cmp
-_ math
+x math
 
 timestamp
 _ init

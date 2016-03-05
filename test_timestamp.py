@@ -97,3 +97,30 @@ class Test(unittest.TestCase):
         self.assertEqual(d2, d3)         # d2 == d3
         self.assertLessEqual(d2, d3)     # d2 <= d3
         self.assertGreaterEqual(d2, d3)  # d2 >= d3
+    def test_duration_math(self):
+        d1 = timestamp.duration(1111111.111)
+        d2 = timestamp.duration(2222222.222)
+        d3 = timestamp.duration(2222222.222)
+        d4 = timestamp.duration(3333333.333)
+        d5 = timestamp.duration(1111116.111)
+        d6 = timestamp.duration(1111106.111)
+        d7 = timestamp.duration(5555555.555)
+        d8 = timestamp.duration(2469135801975.3086)
+        i = 5
+        f = 2222222.222
+        self.assertEqual(d1 + d2, d4)  # d1 + d2 = d4
+        self.assertEqual(d1 + i, d5)   # d1 + i = d5
+        self.assertEqual(d1 + f, d4)   # d1 + f = d4
+        self.assertEqual(d4 - d3, d1)  # d4 - d3 = d1
+        self.assertEqual(d1 - i, d6)   # d1 - i = d6
+        self.assertEqual(d4 - f, d1)   # d4 - f = d1
+        self.assertEqual(d1 * i, d7)   # d1 * i = d7
+        self.assertEqual(d1 * f, d8)   # d1 * f = d8
+        self.assertEqual(d7 / i, d1)   # d7 / i = d1
+        self.assertEqual(d8 / f, d1)   # d8 / f = d1
+        def multiply_durations():
+            return d1 * d2
+        self.assertRaises(timestamp.DurationMultiplyError, multiply_durations)
+        def divide_durations():
+            return d1 / d2
+        self.assertRaises(timestamp.DurationDivideError, divide_durations)
