@@ -22,4 +22,9 @@ class timezone(object):
     def __init__(self, name=None):
         self.original = name
         self.name = self.search(name)
+        if isinstance(self.name, list):
+            if len(self.name) == 0:
+                raise TimezoneFailure
         self.pytz = pytz.timezone(self.name)
+class TimezoneFailure(Exception):
+    pass

@@ -46,3 +46,6 @@ class Test(unittest.TestCase):
         self.assertEqual(h.name, n)
         self.assertIsInstance(h.pytz, datetime.tzinfo)
         self.assertEqual(h.pytz.zone, n)
+    def test_timezone_failure(self):
+        n = 'nonexistent'
+        self.assertRaises(timestamp.TimezoneFailure, timestamp.timezone, n)
