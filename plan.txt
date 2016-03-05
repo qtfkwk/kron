@@ -1,8 +1,8 @@
 x import
 
 timezone.search
-_ init
-  _ default
+/ init
+  x default
   _ name
     _ match
     _ match lower
