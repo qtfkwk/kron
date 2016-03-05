@@ -2,6 +2,7 @@ import unittest
 import timestamp
 import tzlocal
 import pytz
+import datetime
 class Test(unittest.TestCase):
     def test_timezone_search_default(self):
         h = timestamp.timezone.search()
@@ -31,3 +32,10 @@ class Test(unittest.TestCase):
         h = timestamp.timezone.search('nonexistent')
         w = []
         self.assertEqual(h, w)
+    def test_timezone_default(self):
+        h = timestamp.timezone()
+        w = tzlocal.get_localzone().zone
+        self.assertEqual(h.original, None)
+        self.assertEqual(h.name, w)
+        self.assertIsInstance(h.pytz, datetime.tzinfo)
+        self.assertEqual(h.pytz.zone, w)

@@ -12,8 +12,8 @@ x init
     x multiple
 
 timezone
-_init
-  _ default
+/ init
+  x default
   _ name
     _ failure
     _ multiple

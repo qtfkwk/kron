@@ -19,3 +19,7 @@ class timezone(object):
             return matches[0]
         else:
             return matches
+    def __init__(self):
+        self.original = None
+        self.name = self.search()
+        self.pytz = pytz.timezone(self.name)
