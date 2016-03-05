@@ -32,6 +32,6 @@ x init
   x int/float
   x str
 x cmp
-_ math
+x math
 _ str
 

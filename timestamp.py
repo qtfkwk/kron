@@ -36,7 +36,7 @@ class duration(object):
     _units = ('days', 'hours', 'minutes', 'seconds')
     _values = dict(days=86400, hours=3600, minutes=60, seconds=1)
     def __init__(self, value=0):
-        self.value = float(value)
+        self.value = round(value, 6)
     def dict(self):
         v = int(self.value)
         r = dict(days=0, hours=0, minutes=0, seconds=0)
@@ -93,10 +93,31 @@ class timestamp(object):
             d = timezone(tz).pytz.localize(d)
             self.value = time.mktime(d.utctimetuple())
             self.value += d.microsecond / float(10**6)
+        self.value = round(self.value, 6)
     def __cmp__(self, y):
         if isinstance(y, timestamp):
             return cmp(self.value, y.value)
         else:
             raise TimestampComparisonError
+    def __sub__(self, y):
+        if isinstance(y, timestamp):
+            return duration(abs(self.value - y.value))
+        elif isinstance(y, duration):
+            return timestamp(self.value - y.value)
+        elif isinstance(y, (int, float)):
+            return timestamp(self.value - y)
+    def __add__(self, y):
+        if isinstance(y, duration):
+            return timestamp(self.value + y.value)
+        elif isinstance(y, (int, float)):
+            return timestamp(self.value + y)
+    def __mul__(self, y):
+        raise TimestampMultiplyError
+    def __div__(self, y):
+        raise TimestampDivideError
 class TimestampComparisonError(Exception):
+    pass
+class TimestampMultiplyError(Exception):
+    pass
+class TimestampDivideError(Exception):
     pass

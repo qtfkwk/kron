@@ -183,3 +183,29 @@ class Test(unittest.TestCase):
         def cmp_str(s):
             t1 == s
         self.assertRaises(timestamp.TimestampComparisonError, cmp_str, 'asdf')
+    def test_timestamp_math(self):
+        t1 = timestamp.timestamp(1457128501)
+        t2 = timestamp.timestamp(1457128501.987349)
+        t3 = timestamp.timestamp(1457128501.987349)
+        t4 = timestamp.timestamp(1457128502)
+        i = 1
+        f = 0.987349
+        # t1 < t2 == t3 < t4
+        self.assertEqual(t1 + (t2 - t1), t3)  # t1 + (t2 - t1) = t3
+        self.assertEqual(t1 + f, t2)          # t1 + f = t2
+        self.assertEqual(t1 + i, t4)          # t1 + i = t4
+        self.assertEqual(t4 - (t4 - t3), t2)  # t4 - (t4 - t3) = t2
+        self.assertEqual(t4 - (1 - f), t3)    # t4 - (1 - f) = t3
+        self.assertEqual(t4 - i, t1)          # t4 - i = t1
+        # t1 * any raises
+        def mul_ts(ts, y):
+            ts * y
+        self.assertRaises(timestamp.TimestampMultiplyError, mul_ts, t1, t2)
+        self.assertRaises(timestamp.TimestampMultiplyError, mul_ts, t1, i)
+        self.assertRaises(timestamp.TimestampMultiplyError, mul_ts, t1, f)
+        # t1 / any raises
+        def div_ts(ts, y):
+            ts / y
+        self.assertRaises(timestamp.TimestampDivideError, div_ts, t1, t2)
+        self.assertRaises(timestamp.TimestampDivideError, div_ts, t1, i)
+        self.assertRaises(timestamp.TimestampDivideError, div_ts, t1, f)
