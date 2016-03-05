@@ -5,7 +5,7 @@ timezone.search
   x default
   / name
     x match
-    _ match lower
+    x match lower
     _ partial
     _ partial lower
     _ failure

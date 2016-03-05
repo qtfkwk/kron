@@ -11,3 +11,7 @@ class Test(unittest.TestCase):
         for w in pytz.all_timezones:
             h = timestamp.timezone.search(w)
             self.assertEqual(h, w)
+    def test_timezone_search_lower_complete_name(self):
+        for w in pytz.all_timezones:
+            h = timestamp.timezone.search(w.lower())
+            self.assertEqual(h, w)
