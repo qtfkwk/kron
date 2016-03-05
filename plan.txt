@@ -33,5 +33,5 @@ x init
   x str
 x cmp
 x math
-_ str
+x str
 

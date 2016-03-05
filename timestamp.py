@@ -82,6 +82,7 @@ import datetime
 class timestamp(object):
     _formats = _bdict(
         base='%Y-%m-%d %H:%M:%S',
+        local='%Y-%m-%d %H:%M:%S %Z',
     )
     def __init__(self, value=None, tz=None, fmt=None):
         if value == None:
@@ -115,6 +116,12 @@ class timestamp(object):
         raise TimestampMultiplyError
     def __div__(self, y):
         raise TimestampDivideError
+    def str(self, tz=None, fmt='local'):
+        d = datetime.datetime.fromtimestamp(self.value)
+        d = pytz.utc.localize(d)
+        tz = timezone(tz).pytz
+        d = tz.normalize(d.astimezone(tz))
+        return d.strftime(self._formats[fmt])
 class TimestampComparisonError(Exception):
     pass
 class TimestampMultiplyError(Exception):

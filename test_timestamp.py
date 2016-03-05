@@ -128,16 +128,36 @@ class Test(unittest.TestCase):
     def test_timestamp_default(self):
         h = timestamp.timestamp()
         self.assertIsInstance(h.value, float)
+        r = r'^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d UTC$'
+        self.assertRegexpMatches(h.str('UTC'), r)
     def test_timestamp_int(self):
         w = 1457128501
         h = timestamp.timestamp(w)
         self.assertEqual(h.value, w)
         self.assertIsInstance(h.value, float)
+        w = dict(
+            UTC='2016-03-04 16:55:01',
+            EST='2016-03-04 11:55:01',
+            CET='2016-03-04 17:55:01',
+        )
+        for tz, v in w.items():
+            self.assertEqual(h.str(tz), v + ' ' + tz)
+            self.assertEqual(h.str(tz, 'local'), v + ' ' + tz)
+            self.assertEqual(h.str(tz, 'base'), v)
     def test_timestamp_float(self):
         w = 1457128501.987349
         h = timestamp.timestamp(w)
         self.assertEqual(h.value, w)
         self.assertIsInstance(h.value, float)
+        w = dict(
+            UTC='2016-03-04 16:55:01',
+            EST='2016-03-04 11:55:01',
+            CET='2016-03-04 17:55:01',
+        )
+        for tz, v in w.items():
+            self.assertEqual(h.str(tz), v + ' ' + tz)
+            self.assertEqual(h.str(tz, 'local'), v + ' ' + tz)
+            self.assertEqual(h.str(tz, 'base'), v)
     def test_timestamp_str1(self):
         h = timestamp.timestamp('2016-03-04 16:55:01', 'UTC')
         w = 1457128501
