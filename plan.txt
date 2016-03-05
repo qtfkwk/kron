@@ -7,7 +7,7 @@ timezone.search
     x match
     x match lower
     x partial
-    _ partial lower
+    x partial lower
     _ failure
     _ multiple
 

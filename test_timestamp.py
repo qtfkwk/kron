@@ -19,3 +19,7 @@ class Test(unittest.TestCase):
         h = timestamp.timezone.search('Madrid')
         w = 'Europe/Madrid'
         self.assertEqual(h, w)
+    def test_timezone_search_partial_lower(self):
+        h = timestamp.timezone.search('madrid')
+        w = 'Europe/Madrid'
+        self.assertEqual(h, w)
