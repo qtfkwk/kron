@@ -33,5 +33,5 @@ class TimezoneFailure(Exception):
 class TimezoneMultiple(Exception):
     pass
 class duration(object):
-    def __init__(self):
-        self.value = 0.0
+    def __init__(self, value=0):
+        self.value = float(value)

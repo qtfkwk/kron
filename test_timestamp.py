@@ -56,3 +56,15 @@ class Test(unittest.TestCase):
         h = timestamp.duration()
         self.assertEqual(h.value, 0)
         self.assertIsInstance(h.value, float)
+    def test_duration_value1(self):
+        w = 9876543.21
+        h = timestamp.duration(w)
+        self.assertEqual(h.value, w)
+    def test_duration_value2(self):
+        w = 1234567.89
+        h = timestamp.duration(w)
+        self.assertEqual(h.value, w)
+    def test_duration_value3(self):
+        w = 1231207.89
+        h = timestamp.duration(w)
+        self.assertEqual(h.value, w)
