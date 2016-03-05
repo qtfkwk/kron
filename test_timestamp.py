@@ -76,3 +76,24 @@ class Test(unittest.TestCase):
         self.assertEqual(h.value, w)
         w = dict(days=14, hours=6, minutes=0, seconds=7, microseconds=890000)
         self.assertEqual(h.dict(), w)
+    def test_duration_cmp(self):
+        d1 = timestamp.duration(1111111.111)
+        d2 = timestamp.duration(2222222.222)
+        d3 = timestamp.duration(2222222.222)
+        d4 = timestamp.duration(3333333.333)
+        # d1 < d2 == d3 < d4
+        self.assertLess(d1, d2)          # d1 < d2
+        self.assertLess(d1, d4)          # d1 < d4
+        self.assertLessEqual(d1, d2)     # d1 <= d2
+        self.assertLessEqual(d1, d4)     # d1 <= d4
+        self.assertNotEqual(d1, d2)      # d1 != d2
+        self.assertNotEqual(d1, d4)      # d1 != d4
+        self.assertGreater(d4, d3)       # d4 > d3
+        self.assertGreater(d4, d1)       # d4 > d1
+        self.assertGreaterEqual(d4, d3)  # d4 >= d3
+        self.assertGreaterEqual(d4, d1)  # d4 >= d1
+        self.assertNotEqual(d4, d3)      # d4 != d3
+        self.assertNotEqual(d4, d1)      # d4 != d1
+        self.assertEqual(d2, d3)         # d2 == d3
+        self.assertLessEqual(d2, d3)     # d2 <= d3
+        self.assertGreaterEqual(d2, d3)  # d2 >= d3

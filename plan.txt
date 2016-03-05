@@ -23,7 +23,7 @@ x init
   x default
   x value
 x dict
-_ cmp
+x cmp
 _ math
 
 timestamp

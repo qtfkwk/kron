@@ -45,3 +45,6 @@ class duration(object):
             r[i] = int(v / self._values[i])
             v -= r[i] * self._values[i]
         return r
+    def __cmp__(self, y):
+        if isinstance(y, duration):
+            return cmp(self.value, y.value)
