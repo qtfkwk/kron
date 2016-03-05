@@ -31,7 +31,7 @@ x init
   x default
   x int/float
   x str
-_ cmp
+x cmp
 _ math
 _ str
 

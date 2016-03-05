@@ -93,3 +93,10 @@ class timestamp(object):
             d = timezone(tz).pytz.localize(d)
             self.value = time.mktime(d.utctimetuple())
             self.value += d.microsecond / float(10**6)
+    def __cmp__(self, y):
+        if isinstance(y, timestamp):
+            return cmp(self.value, y.value)
+        else:
+            raise TimestampComparisonError
+class TimestampComparisonError(Exception):
+    pass

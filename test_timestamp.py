@@ -153,3 +153,33 @@ class Test(unittest.TestCase):
         w = 1457128501
         self.assertEqual(h.value, w)
         self.assertIsInstance(h.value, float)
+    def test_timestamp_cmp(self):
+        t1 = timestamp.timestamp(1457128501)
+        t2 = timestamp.timestamp(1457128501.987349)
+        t3 = timestamp.timestamp(1457128501.987349)
+        t4 = timestamp.timestamp(1457128502)
+        # t1 < t2 == t3 < t4
+        self.assertLess(t1, t2)          # t1 < t2
+        self.assertLess(t1, t4)          # t1 < t4
+        self.assertLessEqual(t1, t2)     # t1 <= t2
+        self.assertLessEqual(t1, t4)     # t1 <= t4
+        self.assertNotEqual(t1, t2)      # t1 != t2
+        self.assertNotEqual(t1, t4)      # t1 != t4
+        self.assertGreater(t4, t3)       # t4 > t3
+        self.assertGreater(t4, t1)       # t4 > t1
+        self.assertGreaterEqual(t4, t3)  # t4 >= t3
+        self.assertGreaterEqual(t4, t1)  # t4 >= t1
+        self.assertNotEqual(t4, t3)      # t4 != t3
+        self.assertNotEqual(t4, t1)      # t4 != t1
+        self.assertEqual(t2, t3)         # t2 == t3
+        self.assertLessEqual(t2, t3)     # t2 <= t3
+        self.assertGreaterEqual(t2, t3)  # t2 >= t3
+        def cmp_int(i):
+            t1 > i
+        self.assertRaises(timestamp.TimestampComparisonError, cmp_int, 6)
+        def cmp_float(f):
+            t1 < f
+        self.assertRaises(timestamp.TimestampComparisonError, cmp_float, 7.2)
+        def cmp_str(s):
+            t1 == s
+        self.assertRaises(timestamp.TimestampComparisonError, cmp_str, 'asdf')
