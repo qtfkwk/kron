@@ -39,3 +39,10 @@ class Test(unittest.TestCase):
         self.assertEqual(h.name, w)
         self.assertIsInstance(h.pytz, datetime.tzinfo)
         self.assertEqual(h.pytz.zone, w)
+    def test_timezone_name(self):
+        n = 'UTC'
+        h = timestamp.timezone(n)
+        self.assertEqual(h.original, n)
+        self.assertEqual(h.name, n)
+        self.assertIsInstance(h.pytz, datetime.tzinfo)
+        self.assertEqual(h.pytz.zone, n)
