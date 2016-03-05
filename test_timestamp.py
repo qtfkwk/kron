@@ -128,3 +128,13 @@ class Test(unittest.TestCase):
     def test_timestamp_default(self):
         h = timestamp.timestamp()
         self.assertIsInstance(h.value, float)
+    def test_timestamp_int(self):
+        w = 1457128501
+        h = timestamp.timestamp(w)
+        self.assertEqual(h.value, w)
+        self.assertIsInstance(h.value, float)
+    def test_timestamp_float(self):
+        w = 1457128501.987349
+        h = timestamp.timestamp(w)
+        self.assertEqual(h.value, w)
+        self.assertIsInstance(h.value, float)

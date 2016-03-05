@@ -74,5 +74,8 @@ class DurationDivideError(Exception):
     pass
 import time
 class timestamp(object):
-    def __init__(self):
-        self.value = time.time()
+    def __init__(self, value=None):
+        if value == None:
+            self.value = time.time()
+        else:
+            self.value = float(value)

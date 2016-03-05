@@ -29,7 +29,7 @@ x math
 timestamp
 / init
   x default
-  _ int/float
+  x int/float
   _ str
 _ cmp
 _ math
