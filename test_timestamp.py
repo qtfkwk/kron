@@ -15,3 +15,7 @@ class Test(unittest.TestCase):
         for w in pytz.all_timezones:
             h = timestamp.timezone.search(w.lower())
             self.assertEqual(h, w)
+    def test_timezone_search_partial(self):
+        h = timestamp.timezone.search('Madrid')
+        w = 'Europe/Madrid'
+        self.assertEqual(h, w)

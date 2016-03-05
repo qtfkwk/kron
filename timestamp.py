@@ -8,6 +8,10 @@ class timezone(object):
         if name in pytz.all_timezones:
             return name
         name_ = name.lower()
+        matches = []
         for t in pytz.all_timezones:
             if name_ == t.lower():
                 return t
+            if name in t:
+                matches.append(t)
+        return matches[0]
