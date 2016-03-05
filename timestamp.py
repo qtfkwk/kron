@@ -84,16 +84,21 @@ class timestamp(object):
         base='%Y-%m-%d %H:%M:%S',
         local='%Y-%m-%d %H:%M:%S %Z',
     )
-    def __init__(self, value=None, tz=None, fmt=None):
+    @classmethod
+    def _time(cls, value=None, tz=None, fmt=None):
         if value == None:
-            self.value = time.time()
-        elif isinstance(value, (int, float)):
+            d = datetime.datetime.now()
+        else:
+            d = datetime.datetime.strptime(value, cls._formats[fmt])
+        d = timezone(tz).pytz.localize(d)
+        r = time.mktime(d.utctimetuple())
+        r += d.microsecond / float(10**6)
+        return r
+    def __init__(self, value=None, tz=None, fmt=None):
+        if isinstance(value, (int, float)):
             self.value = float(value)
         else:
-            d = datetime.datetime.strptime(value, self._formats[fmt])
-            d = timezone(tz).pytz.localize(d)
-            self.value = time.mktime(d.utctimetuple())
-            self.value += d.microsecond / float(10**6)
+            self.value = self._time(value, tz, fmt)
         self.value = round(self.value, 6)
     def __cmp__(self, y):
         if isinstance(y, timestamp):
