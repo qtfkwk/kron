@@ -27,8 +27,8 @@ x cmp
 x math
 
 timestamp
-_ init
-  _ default
+/ init
+  x default
   _ int/float
   _ str
 _ cmp

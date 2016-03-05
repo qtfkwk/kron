@@ -72,3 +72,7 @@ class DurationMultiplyError(Exception):
     pass
 class DurationDivideError(Exception):
     pass
+import time
+class timestamp(object):
+    def __init__(self):
+        self.value = time.time()

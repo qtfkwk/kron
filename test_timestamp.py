@@ -3,6 +3,7 @@ import timestamp
 import tzlocal
 import pytz
 import datetime
+import time
 class Test(unittest.TestCase):
     def test_timezone_search_default(self):
         h = timestamp.timezone.search()
@@ -124,3 +125,6 @@ class Test(unittest.TestCase):
         def divide_durations():
             return d1 / d2
         self.assertRaises(timestamp.DurationDivideError, divide_durations)
+    def test_timestamp_default(self):
+        h = timestamp.timestamp()
+        self.assertIsInstance(h.value, float)
