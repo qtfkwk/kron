@@ -12,11 +12,11 @@ x init
     x multiple
 
 timezone
-/ init
+x init
   x default
   x name
     x failure
-    _ multiple
+    x multiple
 
 duration
 _ init

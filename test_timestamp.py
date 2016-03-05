@@ -49,3 +49,6 @@ class Test(unittest.TestCase):
     def test_timezone_failure(self):
         n = 'nonexistent'
         self.assertRaises(timestamp.TimezoneFailure, timestamp.timezone, n)
+    def test_timezone_multiple(self):
+        n = 'mad'
+        self.assertRaises(timestamp.TimezoneMultiple, timestamp.timezone, n)

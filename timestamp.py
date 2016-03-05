@@ -25,6 +25,10 @@ class timezone(object):
         if isinstance(self.name, list):
             if len(self.name) == 0:
                 raise TimezoneFailure
+            else:
+                raise TimezoneMultiple
         self.pytz = pytz.timezone(self.name)
 class TimezoneFailure(Exception):
+    pass
+class TimezoneMultiple(Exception):
     pass
