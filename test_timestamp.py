@@ -56,15 +56,23 @@ class Test(unittest.TestCase):
         h = timestamp.duration()
         self.assertEqual(h.value, 0)
         self.assertIsInstance(h.value, float)
+        w = dict(days=0, hours=0, minutes=0, seconds=0, microseconds=0)
+        self.assertEqual(h.dict(), w)
     def test_duration_value1(self):
         w = 9876543.21
         h = timestamp.duration(w)
         self.assertEqual(h.value, w)
+        w = dict(days=114, hours=7, minutes=29, seconds=3, microseconds=210000)
+        self.assertEqual(h.dict(), w)
     def test_duration_value2(self):
         w = 1234567.89
         h = timestamp.duration(w)
         self.assertEqual(h.value, w)
+        w = dict(days=14, hours=6, minutes=56, seconds=7, microseconds=890000)
+        self.assertEqual(h.dict(), w)
     def test_duration_value3(self):
         w = 1231207.89
         h = timestamp.duration(w)
         self.assertEqual(h.value, w)
+        w = dict(days=14, hours=6, minutes=0, seconds=7, microseconds=890000)
+        self.assertEqual(h.dict(), w)

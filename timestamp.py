@@ -33,5 +33,15 @@ class TimezoneFailure(Exception):
 class TimezoneMultiple(Exception):
     pass
 class duration(object):
+    _units = ('days', 'hours', 'minutes', 'seconds')
+    _values = dict(days=86400, hours=3600, minutes=60, seconds=1)
     def __init__(self, value=0):
         self.value = float(value)
+    def dict(self):
+        v = int(self.value)
+        r = dict(days=0, hours=0, minutes=0, seconds=0)
+        r['microseconds'] = int((self.value - v) * 10**6 + 0.5)
+        for i in self._units:
+            r[i] = int(v / self._values[i])
+            v -= r[i] * self._values[i]
+        return r

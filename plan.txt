@@ -22,7 +22,7 @@ duration
 x init
   x default
   x value
-_ dict
+x dict
 _ cmp
 _ math
 
