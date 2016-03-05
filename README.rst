@@ -18,7 +18,7 @@ Features
 Example
 =======
 
-    >>> now = timestamp.timestamp()
+    >>> now = kron.timestamp()
     >>> now.value
     1457209599.132212
     >>> now.str()
@@ -27,7 +27,7 @@ Example
     '2016-03-05 15:26:39 UTC'
     >>> now.str(fmt='%A, %B %d, %Y')
     'Saturday, March 05, 2016'
-    >>> t = timestamp.timestamp(1257209442)
+    >>> t = kron.timestamp(1257209442)
     >>> t.value
     1257209442.0
     >>> t.str()
@@ -40,10 +40,10 @@ Example
     >>> d.dict()
     {'days': 2315, 'hours': 2, 'minutes': 28, 'seconds': 2,
     'microseconds': 809731}
-    >>> local = timestamp.timezone()
+    >>> local = kron.timezone()
     >>> local.name
     'America/New_York'
-    >>> madrid = timestamp.timezone('madrid')
+    >>> madrid = kron.timezone('madrid')
     >>> madrid.name
     'Europe/Madrid'
 
@@ -51,9 +51,10 @@ Version
 =======
 
 * 1.0.0: Initial release
+* 1.0.1: Finished rename
 
 Author
 ======
 
-qtfkwk <qtfkwk+timestamp@gmail.com>
+qtfkwk <qtfkwk+kron@gmail.com>
 
