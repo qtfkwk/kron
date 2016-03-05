@@ -1,0 +1,37 @@
+_ import
+
+timezone.search
+_ init
+  _ default
+  _ name
+    _ match
+    _ match lower
+    _ partial
+    _ partial lower
+    _ failure
+    _ multiple
+
+timezone
+_init
+  _ default
+  _ name
+    _ failure
+    _ multiple
+
+duration
+_ init
+  _ default
+  _ value
+_ dict
+_ cmp
+_ math
+
+timestamp
+_ init
+  _ default
+  _ int/float
+  _ str
+_ cmp
+_ math
+_ str
+
