@@ -15,4 +15,7 @@ class timezone(object):
                 return t
             if name in t or name_ in t_:
                 matches.append(t)
-        return matches[0]
+        if len(matches) == 1:
+            return matches[0]
+        else:
+            return matches

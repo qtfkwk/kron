@@ -23,3 +23,11 @@ class Test(unittest.TestCase):
         h = timestamp.timezone.search('madrid')
         w = 'Europe/Madrid'
         self.assertEqual(h, w)
+    def test_timezone_search_multiple(self):
+        h = timestamp.timezone.search('mad')
+        w = ['Atlantic/Madeira', 'Europe/Madrid']
+        self.assertEqual(h, w)
+    def test_timezone_search_failure(self):
+        h = timestamp.timezone.search('nonexistent')
+        w = []
+        self.assertEqual(h, w)

@@ -1,15 +1,15 @@
 x import
 
 timezone.search
-/ init
+x init
   x default
-  / name
+  x name
     x match
     x match lower
     x partial
     x partial lower
-    _ failure
-    _ multiple
+    x failure
+    x multiple
 
 timezone
 _init
