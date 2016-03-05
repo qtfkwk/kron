@@ -52,3 +52,7 @@ class Test(unittest.TestCase):
     def test_timezone_multiple(self):
         n = 'mad'
         self.assertRaises(timestamp.TimezoneMultiple, timestamp.timezone, n)
+    def test_duration_default(self):
+        h = timestamp.duration()
+        self.assertEqual(h.value, 0)
+        self.assertIsInstance(h.value, float)

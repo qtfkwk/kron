@@ -32,3 +32,6 @@ class TimezoneFailure(Exception):
     pass
 class TimezoneMultiple(Exception):
     pass
+class duration(object):
+    def __init__(self):
+        self.value = 0.0

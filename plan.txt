@@ -19,8 +19,8 @@ x init
     x multiple
 
 duration
-_ init
-  _ default
+/ init
+  x default
   _ value
 _ dict
 _ cmp
