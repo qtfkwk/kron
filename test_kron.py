@@ -308,7 +308,7 @@ class Test(unittest.TestCase):
             hours='13',
             hours12='01',
             hours24='13',
-            iso8601='2016-03-04T13:55:01Z',
+            iso8601='2016-03-04T19:55:01Z',
             julian='064',
             microseconds='123456',
             minutes='55',

@@ -245,6 +245,8 @@ class timestamp(object):
         dictionary, or any valid strftime format"""
         d = datetime.datetime.fromtimestamp(self.value)
         d = pytz.utc.localize(d)
+        if fmt == 'iso8601':
+            tz = 'UTC'
         tz = timezone(tz).pytz
         d = tz.normalize(d.astimezone(tz))
         return d.strftime(self._formats[fmt])
