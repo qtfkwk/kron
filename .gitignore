@@ -2,5 +2,6 @@
 *.swp
 .cache
 README.html
+build/
 dist/
 kron.egg-info/

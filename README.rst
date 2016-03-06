@@ -131,6 +131,7 @@ Versions
 * 1.0.1 (2016-03-05): Finished rename
 * 1.1.0 (2016-03-06): More formats, improved documentation, fix
   `issue #1 <https://github.com/qtfkwk/kron/issues/1>`_
+* 1.1.1 (2016-03-06): Added description to setup.py
 
 Discussion
 ==========

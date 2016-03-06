@@ -1,7 +1,7 @@
 """
 :Name: kron
 :Description: Uniform interface for dates and times in Python
-:Version: 1.1.0
+:Version: 1.1.1
 :Author: qtfkwk <qtfkwk+kron@gmail.com>
 :File: setup.py
 """
@@ -19,11 +19,12 @@ if __name__ == '__main__':
         url='https://github.com/qtfkwk/kron',
         author='qtfkwk',
         author_email='qtfkwk+kron@gmail.com',
-        version='1.1.0',
+        version='1.1.1',
         install_requires=[
             'pytz',
             'tzlocal',
         ],
         py_modules=['kron'],
+        description='Uniform interface for dates and times',
     )
 
