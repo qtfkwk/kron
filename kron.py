@@ -9,6 +9,7 @@
 # Standard modules
 
 import datetime
+import re
 import time
 
 # External modules
@@ -35,7 +36,7 @@ class timezone(object):
             t_ = t.lower()
             if name_ == t_:
                 return t
-            if name in t or name_ in t_:
+            if re.search(name, t) or re.search(name_, t_):
                 matches.append(t)
         if len(matches) == 1:
             return matches[0]

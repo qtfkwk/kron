@@ -61,6 +61,11 @@ class Test(unittest.TestCase):
         w = []
         self.assertEqual(h, w)
 
+    def test_timezone_search_all(self):
+        h = kron.timezone.search('')
+        w = pytz.all_timezones
+        self.assertEqual(h, w)
+
     def test_timezone_default(self):
         h = kron.timezone()
         w = tzlocal.get_localzone().zone
