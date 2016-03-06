@@ -6,8 +6,6 @@
 :File: setup.py
 """
 
-# Standard modules
-
 # External modules
 
 import setuptools
@@ -21,7 +19,7 @@ if __name__ == '__main__':
         url='https://github.com/qtfkwk/kron',
         author='qtfkwk',
         author_email='qtfkwk+kron@gmail.com',
-        version='1.0.1',
+        version='1.1.0',
         install_requires=[
             'pytz',
             'tzlocal',

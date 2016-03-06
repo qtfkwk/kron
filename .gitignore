@@ -1,4 +1,6 @@
 *.pyc
 *.swp
 .cache
-UNKNOWN.egg-info/
+README.html
+dist/
+kron.egg-info/

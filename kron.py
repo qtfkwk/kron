@@ -25,7 +25,16 @@ class timezone(object):
 
     @classmethod
     def search(cls, name=None):
-        """resolve timezone given a name; default: local timezone"""
+        """resolve timezone given a name
+
+        if name is...
+        * None: returns local timezone name
+        * string that is an exact match in proper or lower case:
+          itself
+        * empty string ('') or wildcard regular expression ('.*'):
+          returns all timezone names
+        * any other string: used as a regular expression; multiple or
+          zero matches returns a list"""
         if name == None:
             return tzlocal.get_localzone().zone
         if name in pytz.all_timezones:
