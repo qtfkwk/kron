@@ -275,3 +275,67 @@ class Test(unittest.TestCase):
         self.assertRaises(kron.TimestampDivideError, div_ts, t1, i)
         self.assertRaises(kron.TimestampDivideError, div_ts, t1, f)
 
+    def test_timestamp_formats(self):
+        w = 1457139301.123456
+        h = kron.timestamp(w)
+        tz = 'CST'
+        self.assertEqual(h.value, w)
+        self.assertIsInstance(h.value, float)
+        w = dict(
+            base='2016-03-04 13:55:01',
+            local='2016-03-04 13:55:01 CST',
+            HH='13',
+            HH_MM='13:55',
+            HH_MM_SS='13:55:01',
+            HHMM='1355',
+            HHMMSS='135501',
+            MM='55',
+            SS='01',
+            abbr_date='Fri, Mar 04, 2016',
+            abbr_month='Mar',
+            abbr_weekday='Fri',
+            ampm='PM',
+            ccyy='2016',
+            ccyymm='201603',
+            ccyymmdd='20160304',
+            date='Friday, March 04, 2016',
+            dd='04',
+            hh='01',
+            hh_MM='01:55',
+            hh_MM_ampm='01:55 PM',
+            hh_MM_SS='01:55:01',
+            hh_MM_SS_ampm='01:55:01 PM',
+            hours='13',
+            hours12='01',
+            hours24='13',
+            iso8601='2016-03-04T13:55:01Z',
+            julian='064',
+            microseconds='123456',
+            minutes='55',
+            mm='03',
+            mm_dd_yy='03/04/16',
+            mmdd='0304',
+            mon='Mar',
+            month='March',
+            national='Fri Mar 04 13:55:01 CST 2016',
+            national_date='03/04/16',
+            national_time='13:55:01',
+            rfc2822='Fri, 04 Mar 2016 13:55:01 -0600',
+            seconds='01',
+            tz='CST',
+            tz_offset='-0600',
+            week_number_mon='09',
+            week_number_sun='09',
+            weekday='Friday',
+            year='2016',
+            yy='16',
+            yymm='1603',
+            yymmdd='160304',
+            yyyy='2016',
+            yyyy_mm_dd='2016/03/04',
+            yyyymm='201603',
+            yyyymmdd='20160304',
+        )
+        for fmt, v in w.items():
+            self.assertEqual(h.str(tz, fmt), v)
+
