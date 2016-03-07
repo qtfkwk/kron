@@ -391,3 +391,12 @@ class Test(unittest.TestCase):
         )
         self.assertEqual(h.json(w.keys(), ['base', 'local']), kron._json(w))
 
+    def test_timestamp_utc(self):
+        h = kron.timestamp(1457128501)
+        w = '2016-03-04 16:55:01 UTC'
+        self.assertEqual(h.str('UTC'), w)
+        self.assertEqual(h.utc(), w)
+        self.assertEqual(h.utc('local'), w)
+        w = '2016-03-04 16:55:01'
+        self.assertEqual(h.utc('base'), w)
+

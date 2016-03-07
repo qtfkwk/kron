@@ -262,6 +262,10 @@ class timestamp(object):
         d = tz.normalize(d.astimezone(tz))
         return d.strftime(self._formats[fmt])
 
+    def utc(self, fmt='local'):
+        """utc timezone helper"""
+        return self.str('UTC', fmt)
+
     def dict(self, tz=[None], fmt=['local']):
         """convert the timestamp to multiple timezones and/or formats
         and return results as a dictionary"""
