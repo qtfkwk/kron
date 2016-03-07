@@ -353,10 +353,14 @@ class Test(unittest.TestCase):
         )
         self.assertEqual(h.dict('UTC'), w)
         w['UTC']['base'] = '2016-03-04 16:55:01'
+        self.assertEqual(h.dict('UTC', ['base', 'local']), w)
+        self.assertEqual(h.dict('UTC', ['local', 'base']), w)
         w['EST'] = dict(
             base='2016-03-04 11:55:01',
             local='2016-03-04 11:55:01 EST',
         )
+        self.assertEqual(h.dict(['EST', 'UTC'], ['base', 'local']), w)
+        self.assertEqual(h.dict(['UTC', 'EST'], ['local', 'base']), w)
         w['CET'] = dict(
             base='2016-03-04 17:55:01',
             local='2016-03-04 17:55:01 CET',
@@ -371,10 +375,16 @@ class Test(unittest.TestCase):
         )
         self.assertEqual(h.json('UTC'), kron._json(w))
         w['UTC']['base'] = '2016-03-04 16:55:01'
+        self.assertEqual(h.json('UTC', ['base', 'local']), kron._json(w))
+        self.assertEqual(h.json('UTC', ['local', 'base']), kron._json(w))
         w['EST'] = dict(
             base='2016-03-04 11:55:01',
             local='2016-03-04 11:55:01 EST',
         )
+        self.assertEqual(h.json(['EST', 'UTC'], ['base', 'local']), \
+            kron._json(w))
+        self.assertEqual(h.json(['UTC', 'EST'], ['local', 'base']), \
+            kron._json(w))
         w['CET'] = dict(
             base='2016-03-04 17:55:01',
             local='2016-03-04 17:55:01 CET',
