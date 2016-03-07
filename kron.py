@@ -261,6 +261,20 @@ class timestamp(object):
         d = tz.normalize(d.astimezone(tz))
         return d.strftime(self._formats[fmt])
 
+    def dict(self, tz=[None], fmt=['local']):
+        """convert the timestamp to multiple timezones and/or formats
+        and return results as a dictionary"""
+        if not isinstance(tz, list):
+            tz = [tz]
+        if not isinstance(fmt, list):
+            fmt = [fmt]
+        r = {}
+        for t in tz:
+            r[t] = {}
+            for f in fmt:
+                r[t][f] = self.str(t, f)
+        return r
+
 # Error classes
 
 class KronError(Exception):
