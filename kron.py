@@ -9,6 +9,7 @@
 # Standard modules
 
 import datetime
+import json
 import re
 import time
 
@@ -274,6 +275,16 @@ class timestamp(object):
             for f in fmt:
                 r[t][f] = self.str(t, f)
         return r
+
+    def json(self, tz=[None], fmt=['local']):
+        """convert the dict to a pretty-printed json string"""
+        return _json(self.dict(tz, fmt))
+
+# Functions
+
+def _json(obj):
+    """drop-in replacement for json.dumps()"""
+    return json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
 
 # Error classes
 

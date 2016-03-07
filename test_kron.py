@@ -9,6 +9,7 @@
 # Standard modules
 
 import datetime
+import json
 import time
 import unittest
 
@@ -361,4 +362,22 @@ class Test(unittest.TestCase):
             local='2016-03-04 17:55:01 CET',
         )
         self.assertEqual(h.dict(w.keys(), ['base', 'local']), w)
+
+    def test_timestamp_json(self):
+        h = kron.timestamp(1457128501)
+        w = {}
+        w['UTC'] = dict(
+            local='2016-03-04 16:55:01 UTC',
+        )
+        self.assertEqual(h.json('UTC'), kron._json(w))
+        w['UTC']['base'] = '2016-03-04 16:55:01'
+        w['EST'] = dict(
+            base='2016-03-04 11:55:01',
+            local='2016-03-04 11:55:01 EST',
+        )
+        w['CET'] = dict(
+            base='2016-03-04 17:55:01',
+            local='2016-03-04 17:55:01 CET',
+        )
+        self.assertEqual(h.json(w.keys(), ['base', 'local']), kron._json(w))
 
