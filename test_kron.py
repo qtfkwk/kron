@@ -400,3 +400,9 @@ class Test(unittest.TestCase):
         w = '2016-03-04 16:55:01'
         self.assertEqual(h.utc('base'), w)
 
+    def test_timestamp_rfc2822(self):
+        h = kron.timestamp(1457128501)
+        w = 'Fri, 04 Mar 2016 16:55:01 +0000'
+        self.assertEqual(h.str('UTC', 'rfc2822'), w)
+        self.assertEqual(h.rfc2822('UTC'), w)
+

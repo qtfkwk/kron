@@ -266,6 +266,10 @@ class timestamp(object):
         """utc timezone helper"""
         return self.str('UTC', fmt)
 
+    def rfc2822(self, tz=None):
+        """rfc2822 format helper"""
+        return self.str(tz, 'rfc2822')
+
     def dict(self, tz=[None], fmt=['local']):
         """convert the timestamp to multiple timezones and/or formats
         and return results as a dictionary"""
