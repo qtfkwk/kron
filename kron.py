@@ -270,6 +270,10 @@ class timestamp(object):
         """rfc2822 format helper"""
         return self.str(tz, 'rfc2822')
 
+    def iso8601(self):
+        """iso8601 timezone/format helper"""
+        return self.str(fmt='iso8601')
+
     def dict(self, tz=[None], fmt=['local']):
         """convert the timestamp to multiple timezones and/or formats
         and return results as a dictionary"""
