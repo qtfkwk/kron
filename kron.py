@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 """
 :Name: kron
 :Description: Uniform interface for dates and times in Python
@@ -8,6 +10,7 @@
 
 # Standard modules
 
+import argparse
 import datetime
 import json
 import re
@@ -138,7 +141,7 @@ class timestamp(object):
 
     _formats = _bdict(
         base='%Y-%m-%d %H:%M:%S',
-        local='%Y-%m-%d %H:%M:%S %Z',
+        basetz='%Y-%m-%d %H:%M:%S %Z',
         HH='%H',
         HH_MM='%H:%M',
         HH_MM_SS='%H:%M:%S',
@@ -201,6 +204,8 @@ class timestamp(object):
             d = datetime.datetime.now()
         else:
             d = datetime.datetime.strptime(value, cls._formats[fmt])
+        if fmt == 'iso8601':
+            tz = 'UTC'
         d = timezone(tz).pytz.localize(d)
         r = time.mktime(d.utctimetuple())
         r += d.microsecond / float(10**6)
@@ -211,6 +216,9 @@ class timestamp(object):
         epoch seconds with microsecond accuracy (values are rounded to
         6 decimal places)"""
         if isinstance(value, (int, float)):
+            self.value = float(value)
+        elif isinstance(value, (str, unicode)) and \
+        re.search(r'^\d+\.?\d*$', value):
             self.value = float(value)
         else:
             self.value = self._time(value, tz, fmt)
@@ -250,7 +258,7 @@ class timestamp(object):
         """cannot divide a timestamp"""
         raise TimestampDivideError
 
-    def str(self, tz=None, fmt='local'):
+    def str(self, tz=None, fmt=None):
         """output the timestamp as a string in the given timezone and
         format; format may be a named format in the _formats
         dictionary, or any valid strftime format"""
@@ -260,9 +268,11 @@ class timestamp(object):
             tz = 'UTC'
         tz = timezone(tz).pytz
         d = tz.normalize(d.astimezone(tz))
+        if fmt == None:
+            fmt = 'basetz'
         return d.strftime(self._formats[fmt])
 
-    def utc(self, fmt='local'):
+    def utc(self, fmt='basetz'):
         """utc timezone helper"""
         return self.str('UTC', fmt)
 
@@ -274,7 +284,7 @@ class timestamp(object):
         """iso8601 timezone/format helper"""
         return self.str(fmt='iso8601')
 
-    def dict(self, tz=[None], fmt=['local']):
+    def dict(self, tz=[None], fmt=['basetz']):
         """convert the timestamp to multiple timezones and/or formats
         and return results as a dictionary"""
         if not isinstance(tz, list):
@@ -283,12 +293,16 @@ class timestamp(object):
             fmt = [fmt]
         r = {}
         for t in tz:
+            if t == None:
+                t = 'localtz'
             r[t] = {}
             for f in fmt:
-                r[t][f] = self.str(t, f)
+                if f == None:
+                    f = 'basetz'
+                r[t][f] = self.str(t if t != 'localtz' else None, f)
         return r
 
-    def json(self, tz=[None], fmt=['local']):
+    def json(self, tz=[None], fmt=['basetz']):
         """convert the dict to a pretty-printed json string"""
         return _json(self.dict(tz, fmt))
 
@@ -297,6 +311,37 @@ class timestamp(object):
 def _json(obj):
     """drop-in replacement for json.dumps()"""
     return json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+
+def cli(argv=None):
+    p = argparse.ArgumentParser()
+    p.add_argument('-t', metavar='TIMEZONE', action='append', default=[], \
+        help=('output timezone'))
+    p.add_argument('-f', metavar='FORMAT', action='append', default=[], \
+        help=('output format'))
+    p.add_argument('-T', metavar='TIMEZONE', action='store', \
+        help=('input timezone'))
+    p.add_argument('-F', metavar='FORMAT', action='store', \
+        help=('input format'))
+    p.add_argument('args', metavar='ARG', action='store', nargs='*', \
+        help=('one or more timestamp input values; int/float epoch seconds,' + \
+        ' timestamp string in base or any format specified by -F;' + \
+        ' default: now'))
+    a = p.parse_args(argv)
+    for i in (a.args, a.t, a.f):
+        if i == None:
+            i = []
+        if i == []:
+            i.append(None)
+    if len(a.args) + len(a.t) + len(a.f) == 3:
+        return timestamp(a.args[0], a.T, a.F).str(a.t[0], a.f[0])
+    r = {}
+    for i in a.args:
+        r[i if i != None else 'now'] = timestamp(i, a.T, a.F).dict(a.t, a.f)
+    return _json(r)
+
+def main():
+    import sys
+    print cli(sys.argv[1:])
 
 # Error classes
 
@@ -324,3 +369,7 @@ class TimestampMultiplyError(KronError):
 class TimestampDivideError(KronError):
     pass
 
+# Main
+
+if __name__ == '__main__':
+    main()

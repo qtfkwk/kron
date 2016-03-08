@@ -26,5 +26,6 @@ if __name__ == '__main__':
         ],
         py_modules=['kron'],
         description='Uniform interface for dates and times',
+        entry_points=dict(console_scripts=['kron = kron:main']),
     )
 

@@ -187,7 +187,7 @@ class Test(unittest.TestCase):
         )
         for tz, v in w.items():
             self.assertEqual(h.str(tz), v + ' ' + tz)
-            self.assertEqual(h.str(tz, 'local'), v + ' ' + tz)
+            self.assertEqual(h.str(tz, 'basetz'), v + ' ' + tz)
             self.assertEqual(h.str(tz, 'base'), v)
 
     def test_timestamp_float(self):
@@ -202,7 +202,7 @@ class Test(unittest.TestCase):
         )
         for tz, v in w.items():
             self.assertEqual(h.str(tz), v + ' ' + tz)
-            self.assertEqual(h.str(tz, 'local'), v + ' ' + tz)
+            self.assertEqual(h.str(tz, 'basetz'), v + ' ' + tz)
             self.assertEqual(h.str(tz, 'base'), v)
 
     def test_timestamp_str1(self):
@@ -221,6 +221,12 @@ class Test(unittest.TestCase):
         h = kron.timestamp('2016-03-04 17:55:01', 'Madrid')
         w = 1457128501
         self.assertEqual(h.value, w)
+        self.assertIsInstance(h.value, float)
+
+    def test_timestamp_str4(self):
+        v = '1457128501'
+        h = kron.timestamp(v)
+        self.assertEqual(h.value, float(v))
         self.assertIsInstance(h.value, float)
 
     def test_timestamp_cmp(self):
@@ -289,7 +295,7 @@ class Test(unittest.TestCase):
         self.assertIsInstance(h.value, float)
         w = dict(
             base='2016-03-04 13:55:01',
-            local='2016-03-04 13:55:01 CST',
+            basetz='2016-03-04 13:55:01 CST',
             HH='13',
             HH_MM='13:55',
             HH_MM_SS='13:55:01',
@@ -349,54 +355,54 @@ class Test(unittest.TestCase):
         h = kron.timestamp(1457128501)
         w = {}
         w['UTC'] = dict(
-            local='2016-03-04 16:55:01 UTC',
+            basetz='2016-03-04 16:55:01 UTC',
         )
         self.assertEqual(h.dict('UTC'), w)
         w['UTC']['base'] = '2016-03-04 16:55:01'
-        self.assertEqual(h.dict('UTC', ['base', 'local']), w)
-        self.assertEqual(h.dict('UTC', ['local', 'base']), w)
+        self.assertEqual(h.dict('UTC', ['base', 'basetz']), w)
+        self.assertEqual(h.dict('UTC', ['basetz', 'base']), w)
         w['EST'] = dict(
             base='2016-03-04 11:55:01',
-            local='2016-03-04 11:55:01 EST',
+            basetz='2016-03-04 11:55:01 EST',
         )
-        self.assertEqual(h.dict(['EST', 'UTC'], ['base', 'local']), w)
-        self.assertEqual(h.dict(['UTC', 'EST'], ['local', 'base']), w)
+        self.assertEqual(h.dict(['EST', 'UTC'], ['base', 'basetz']), w)
+        self.assertEqual(h.dict(['UTC', 'EST'], ['basetz', 'base']), w)
         w['CET'] = dict(
             base='2016-03-04 17:55:01',
-            local='2016-03-04 17:55:01 CET',
+            basetz='2016-03-04 17:55:01 CET',
         )
-        self.assertEqual(h.dict(w.keys(), ['base', 'local']), w)
+        self.assertEqual(h.dict(w.keys(), ['base', 'basetz']), w)
 
     def test_timestamp_json(self):
         h = kron.timestamp(1457128501)
         w = {}
         w['UTC'] = dict(
-            local='2016-03-04 16:55:01 UTC',
+            basetz='2016-03-04 16:55:01 UTC',
         )
         self.assertEqual(h.json('UTC'), kron._json(w))
         w['UTC']['base'] = '2016-03-04 16:55:01'
-        self.assertEqual(h.json('UTC', ['base', 'local']), kron._json(w))
-        self.assertEqual(h.json('UTC', ['local', 'base']), kron._json(w))
+        self.assertEqual(h.json('UTC', ['base', 'basetz']), kron._json(w))
+        self.assertEqual(h.json('UTC', ['basetz', 'base']), kron._json(w))
         w['EST'] = dict(
             base='2016-03-04 11:55:01',
-            local='2016-03-04 11:55:01 EST',
+            basetz='2016-03-04 11:55:01 EST',
         )
-        self.assertEqual(h.json(['EST', 'UTC'], ['base', 'local']), \
+        self.assertEqual(h.json(['EST', 'UTC'], ['base', 'basetz']), \
             kron._json(w))
-        self.assertEqual(h.json(['UTC', 'EST'], ['local', 'base']), \
+        self.assertEqual(h.json(['UTC', 'EST'], ['basetz', 'base']), \
             kron._json(w))
         w['CET'] = dict(
             base='2016-03-04 17:55:01',
-            local='2016-03-04 17:55:01 CET',
+            basetz='2016-03-04 17:55:01 CET',
         )
-        self.assertEqual(h.json(w.keys(), ['base', 'local']), kron._json(w))
+        self.assertEqual(h.json(w.keys(), ['base', 'basetz']), kron._json(w))
 
     def test_timestamp_utc(self):
         h = kron.timestamp(1457128501)
         w = '2016-03-04 16:55:01 UTC'
         self.assertEqual(h.str('UTC'), w)
         self.assertEqual(h.utc(), w)
-        self.assertEqual(h.utc('local'), w)
+        self.assertEqual(h.utc('basetz'), w)
         w = '2016-03-04 16:55:01'
         self.assertEqual(h.utc('base'), w)
 
@@ -411,4 +417,197 @@ class Test(unittest.TestCase):
         w = '2016-03-04T16:55:01Z'
         self.assertEqual(h.str(fmt='iso8601'), w)
         self.assertEqual(h.iso8601(), w)
+
+    @classmethod
+    def _args(cls, a, t, f, T=[], F=[]):
+        """convert arguments into an argv list"""
+        r = []
+        for i in (('-t', t), ('-f', f), ('-T', T), ('-F', F)):
+            for j in i[1]:
+                r.extend([i[0], j])
+        r.extend(a)
+        return r
+
+    def test_cli1(self):
+        """single timezone, default format"""
+        a = ['1457128501']
+        t = ['UTC']
+        f = []
+        h = kron.cli(self._args(a, t, f))
+        w = '2016-03-04 16:55:01 UTC'
+        self.assertEqual(h, w)
+
+    def test_cli2(self):
+        """single timezone, single format"""
+        a = ['1457128501']
+        t = ['UTC']
+        f = ['national']
+        h = kron.cli(self._args(a, t, f))
+        w = 'Fri Mar 04 16:55:01 UTC 2016'
+        self.assertEqual(h, w)
+
+    def test_cli3(self):
+        """single timezone, multiple formats
+        multiple timezones, multiple formats"""
+        a = ['1457128501']
+        w = {a[0]:dict(UTC=dict(
+            HH='16',
+            HHMM='1655',
+            HHMMSS='165501',
+            HH_MM='16:55',
+            HH_MM_SS='16:55:01',
+            MM='55',
+            SS='01',
+            abbr_date='Fri, Mar 04, 2016',
+            abbr_month='Mar',
+            abbr_weekday='Fri',
+            ampm='PM',
+            base='2016-03-04 16:55:01',
+            basetz='2016-03-04 16:55:01 UTC',
+            ccyy='2016',
+            ccyymm='201603',
+            ccyymmdd='20160304',
+            date='Friday, March 04, 2016',
+            dd='04',
+            hh='04',
+            hh_MM='04:55',
+            hh_MM_SS='04:55:01',
+            hh_MM_SS_ampm='04:55:01 PM',
+            hh_MM_ampm='04:55 PM',
+            hours='16',
+            hours12='04',
+            hours24='16',
+            iso8601='2016-03-04T16:55:01Z',
+            julian='064',
+            microseconds='000000',
+            minutes='55',
+            mm='03',
+            mm_dd_yy='03/04/16',
+            mmdd='0304',
+            mon='Mar',
+            month='March',
+            national='Fri Mar 04 16:55:01 UTC 2016',
+            national_date='03/04/16',
+            national_time='16:55:01',
+            rfc2822='Fri, 04 Mar 2016 16:55:01 +0000',
+            seconds='01',
+            tz='UTC',
+            tz_offset='+0000',
+            week_number_mon='09',
+            week_number_sun='09',
+            weekday='Friday',
+            year='2016',
+            yy='16',
+            yymm='1603',
+            yymmdd='160304',
+            yyyy='2016',
+            yyyy_mm_dd='2016/03/04',
+            yyyymm='201603',
+            yyyymmdd='20160304',
+        ))}
+        t = ['UTC']
+        f = sorted(w[a[0]]['UTC'].keys())
+        self.assertEqual(kron.cli(self._args(a, t, f)), kron._json(w))
+        t.append('PST8PDT')
+        w[a[0]]['PST8PDT'] = dict(
+            HH='08',
+            HHMM='0855',
+            HHMMSS='085501',
+            HH_MM='08:55',
+            HH_MM_SS='08:55:01',
+            MM='55',
+            SS='01',
+            abbr_date='Fri, Mar 04, 2016',
+            abbr_month='Mar',
+            abbr_weekday='Fri',
+            ampm='AM',
+            base='2016-03-04 08:55:01',
+            basetz='2016-03-04 08:55:01 PST',
+            ccyy='2016',
+            ccyymm='201603',
+            ccyymmdd='20160304',
+            date='Friday, March 04, 2016',
+            dd='04',
+            hh='08',
+            hh_MM='08:55',
+            hh_MM_SS='08:55:01',
+            hh_MM_SS_ampm='08:55:01 AM',
+            hh_MM_ampm='08:55 AM',
+            hours='08',
+            hours12='08',
+            hours24='08',
+            iso8601='2016-03-04T16:55:01Z',
+            julian='064',
+            microseconds='000000',
+            minutes='55',
+            mm='03',
+            mm_dd_yy='03/04/16',
+            mmdd='0304',
+            mon='Mar',
+            month='March',
+            national='Fri Mar 04 08:55:01 PST 2016',
+            national_date='03/04/16',
+            national_time='08:55:01',
+            rfc2822='Fri, 04 Mar 2016 08:55:01 -0800',
+            seconds='01',
+            tz='PST',
+            tz_offset='-0800',
+            week_number_mon='09',
+            week_number_sun='09',
+            weekday='Friday',
+            year='2016',
+            yy='16',
+            yymm='1603',
+            yymmdd='160304',
+            yyyy='2016',
+            yyyy_mm_dd='2016/03/04',
+            yyyymm='201603',
+            yyyymmdd='20160304',
+        )
+        self.assertEqual(kron.cli(self._args(a, t, f)), kron._json(w))
+
+    def test_cli4(self):
+        """multiple timezones, default format"""
+        a = ['1457128501']
+        t = ['UTC', 'EST5EDT']
+        f = []
+        h = kron.cli(self._args(a, t, f))
+        w = kron._json({a[0]:dict(
+            EST5EDT=dict(basetz='2016-03-04 11:55:01 EST'),
+            UTC=dict(basetz='2016-03-04 16:55:01 UTC'),
+        )})
+        self.assertEqual(h, w)
+
+    def test_cli5(self):
+        """multiple timezones, single format"""
+        a = ['1457128501']
+        t = ['UTC', 'PST8PDT']
+        f = ['rfc2822']
+        w = kron._json({a[0]:dict(
+            PST8PDT=dict(rfc2822='Fri, 04 Mar 2016 08:55:01 -0800'),
+            UTC=dict(rfc2822='Fri, 04 Mar 2016 16:55:01 +0000'),
+        )})
+        h = kron.cli(self._args(a, t, f))
+        self.assertEqual(h, w)
+
+    def test_cli6(self):
+        """timestamp in base format"""
+        a = ['2016-03-04 16:55:01']
+        T = ['UTC']
+        t = ['UTC']
+        f = []
+        h = kron.cli(self._args(a, t, f, T))
+        w = '2016-03-04 16:55:01 UTC'
+        self.assertEqual(h, w)
+
+    def test_cli7(self):
+        """timestamp in iso8601 format"""
+        a = ['2014-01-23T09:06:12Z']
+        T = []
+        F = ['iso8601']
+        t = ['UTC']
+        f = []
+        h = kron.cli(self._args(a, t, f, T, F))
+        w = '2014-01-23 09:06:12 UTC'
+        self.assertEqual(h, w)
 
