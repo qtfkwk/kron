@@ -18,6 +18,8 @@ Features
 * Comparison and arithmetic methods for timestamps and durations
 * Test-driven development methodology
 * Named formats
+* Helper methods for timezones and formats
+* Command line tool
 
 Example
 =======
@@ -132,6 +134,8 @@ Versions
 * 1.1.0 (2016-03-06): More formats, improved documentation, fix
   `issue #1 <https://github.com/qtfkwk/kron/issues/1>`_
 * 1.1.1 (2016-03-06): Added description to setup.py
+* 1.2.0 (2016-03-08): Helper methods for timezone and formats;
+  command line tool
 
 Discussion
 ==========
@@ -157,8 +161,9 @@ Please report any issues via
 Ideas
 =====
 
-* Helper methods for timezones, formats
 * Command line tool
+    * Timezone searching
+    * Duration calculations
 * Parser to find timestamps inside text/data/filesystems
 * Add clock, calendar/timeline, events...
 
