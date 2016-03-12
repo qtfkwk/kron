@@ -1,7 +1,7 @@
 """
 :Name: kron
 :Description: Uniform interface for dates and times in Python
-:Version: 1.3.0
+:Version: 1.3.1
 :File: setup.py
 :Author: qtfkwk <qtfkwk+kron@gmail.com>
 :Copyright: (C) 2016 by qtfkwk
@@ -21,7 +21,7 @@ if __name__ == '__main__':
         url='https://github.com/qtfkwk/kron',
         author='qtfkwk',
         author_email='qtfkwk+kron@gmail.com',
-        version='1.3.0',
+        version='1.3.1',
         install_requires=[
             'ntplib',
             'pytz',

@@ -1,7 +1,7 @@
 """
 :Name: kron
 :Description: Uniform interface for dates and times in Python
-:Version: 1.3.0
+:Version: 1.3.1
 :File: test_kron.py
 :Author: qtfkwk <qtfkwk+kron@gmail.com>
 :Copyright: (C) 2016 by qtfkwk
@@ -627,6 +627,12 @@ class Test(unittest.TestCase):
         h = kron.cli(self._args(a, t, f, T, F))
         w = '2014-01-23 09:06:12 UTC'
         self.assertEqual(h, w)
+
+    def test_cli8(self):
+        """version"""
+        w = kron.version
+        self.assertEqual(kron.cli(['-V']), w)
+        self.assertEqual(kron.cli(['--version']), w)
 
     def test_time_utc(self):
         self.assertIsInstance(kron.time_utc(), float)
