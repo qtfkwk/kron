@@ -215,7 +215,8 @@ Versions
   added Network Time Protocol (RFC 1305) functionality via ntplib
   module; added time, time_ntp, time_utc functions; improved
   documentation
-* 1.3.1 (2016-03-11): Fixed classifers; added version test
+* 1.3.1 (2016-03-11): Added version test
+* 1.3.2 (2016-03-11): Fixed classifers
 
 Discussion
 ==========

@@ -1,7 +1,7 @@
 """
 :Name: kron
 :Description: Uniform interface for dates and times in Python
-:Version: 1.3.1
+:Version: 1.3.2
 :File: test_kron.py
 :Author: qtfkwk <qtfkwk+kron@gmail.com>
 :Copyright: (C) 2016 by qtfkwk
