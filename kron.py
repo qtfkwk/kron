@@ -1,14 +1,12 @@
 #!/usr/bin/env python
 
-"""
-:Name: kron
-:Description: Uniform interface for dates and times in Python
-:Version: 1.3.2
-:File: kron.py
-:Author: qtfkwk <qtfkwk+kron@gmail.com>
-:Copyright: (C) 2016 by qtfkwk
-:License: BSD 2-Clause License (https://opensource.org/licenses/BSD-2-Clause)
-"""
+# Name: kron
+# Description: Uniform interface for dates and times in Python
+# Version: 1.3.2
+# File: kron.py
+# Author: qtfkwk <qtfkwk+kron@gmail.com>
+# Copyright: (C) 2016 by qtfkwk
+# License: BSD 2-Clause License (https://opensource.org/licenses/BSD-2-Clause)
 
 # Standard modules
 
