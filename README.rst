@@ -1,17 +1,13 @@
-Description
-===========
-
-Uniform interface for dates and times in Python
-
 Features
 ========
 
 * Classes for durations, timestamps and timezones
 * Minimal non-standard dependencies
-  (`pytz <https://pypi.python.org/pypi/pytz>`_,
+  (`ntplib <https://pypi.python.org/pypi/ntplib>`_,
+  `pytz <https://pypi.python.org/pypi/pytz>`_,
   `tzlocal <https://pypi.python.org/pypi/tzlocal>`_)
 * Microsecond accuracy
-* Timestamp internal storage is float epoch seconds
+* Timestamp internal storage is float epoch seconds in UTC
 * Duration internal storage is float seconds
 * Timezone name search by regular expression
 * Default timezone is local timezone
@@ -21,8 +17,39 @@ Features
 * Helper methods for timezones and formats
 * Command line tool
 
-Example
-=======
+Installation
+============
+
+::
+
+    $ pip install kron
+
+Or::
+
+    $ git clone https://github.com/qtfkwk/kron.git
+    $ cd kron
+    $ python setup.py install
+
+Update
+======
+
+::
+
+    $ pip install -U kron
+
+Or::
+
+    $ cd kron
+    $ git pull
+    $ python setup.py install
+
+Examples
+========
+
+Python code/interpreter
+-----------------------
+
+::
 
     >>> from kron import duration, timestamp, timezone
     >>> now = timestamp()
@@ -126,6 +153,53 @@ Example
     >>> madrid.name
     'Europe/Madrid'
 
+Command line tool
+-----------------
+
+::
+
+    $ kron -h
+    usage: kron.py [-h] [-T TIMEZONE] [-F FORMAT] [-t TIMEZONE] [-f FORMAT]
+                   [ARG [ARG ...]]
+    
+    positional arguments:
+      ARG          one or more timestamp input values; int/float epoch seconds,
+                   timestamp string in base or any format specified by -F;
+                   default: now
+    
+    optional arguments:
+      -h, --help   show this help message and exit
+      -T TIMEZONE  input timezone; default: local timezone
+      -F FORMAT    input format; default: "base" ("%Y-%m-%d %H:%M:%S")
+      -t TIMEZONE  output timezone; default: local timezone
+      -f FORMAT    output format; default: "basetz" ("%Y-%m-%d %H:%M:%S %Z")
+    $ kron
+    2016-03-11 00:41:46 EST
+    $ kron -t utc
+    2016-03-11 05:42:13 UTC
+    $ kron -f iso8601
+    2016-03-11T05:43:10Z
+    $ kron '2005-04-04 09:12:00'
+    2005-04-04 09:12:00 EDT
+    $ kron '2005-04-04 09:12:00' -f weekday
+    Monday
+    $ kron '2006-11-13 21:22:00' -T UTC
+    2006-11-13 16:22:00 EST
+    $ kron '2006-11-13 21:22:00' -T UTC -t Madrid -t los_angeles \
+    > -f iso8601 -f rfc2822
+    {
+        "2006-11-13 21:22:00": {
+            "Madrid": {
+                "iso8601": "2006-11-13T21:22:00Z",
+                "rfc2822": "Mon, 13 Nov 2006 22:22:00 +0100"
+            },
+            "los_angeles": {
+                "iso8601": "2006-11-13T21:22:00Z",
+                "rfc2822": "Mon, 13 Nov 2006 13:22:00 -0800"
+            }
+        }
+    }
+
 Versions
 ========
 
@@ -136,39 +210,97 @@ Versions
 * 1.1.1 (2016-03-06): Added description to setup.py
 * 1.2.0 (2016-03-08): Helper methods for timezone and formats;
   command line tool
+* 1.3.0 (2016-03-11): Converted timestamp internal storage to UTC
+  (`issue #2 <https://github.com/qtfkwk/kron/issues/2>`_);
+  added Network Time Protocol (RFC 1305) functionality via ntplib
+  module; added time, time_ntp, time_utc functions; improved
+  documentation
 
 Discussion
 ==========
 
 Dates and times are not one of Python's strengths. Even doing basic
-work with dates and times requires using multiple standard and non-
-standard modules and effort to get it right. This module seeks to
-leverage the necessary modules for handling dates and times but
-provide a simple and uniform interface for doing so.
+work requires using multiple standard and non-standard modules and
+effort to get it right. This module seeks to leverage the necessary
+modules for handling dates and times but provide a simple and uniform
+interface for doing so.
 
-References
+Background
 ==========
 
-* PyPI: https://pypi.python.org/pypi/kron
-* Github: https://github.com/qtfkwk/kron
+Kron was started as a portfolio project to demonstrate proficiency in
+Python as well as practice the test-driven development (TDD) process
+in concert with git and Github. The topic was selected to address some
+personal points of pain experienced while working with dates and times
+in Python.
+
+The importance of correct representation of dates and times in the
+area of digital forensics cases cannot be overstated. While a myriad
+of poorly designed and implemented code contribute, the *core problem*
+is the absence of a simple abstraction to represent a specific point
+in time.
+
+Kron drastically simplifies working with dates and times by making the
+central "timestamp" class represent a specific point in time, and
+enabling it to be created, modified, and viewed in a few natural ways.
+
+See also
+========
+
+* Kron at `PyPI <https://pypi.python.org/pypi/kron>`_,
+  `Github <https://github.com/qtfkwk/kron>`_
+* Network Time Protocol (RFC 1305) at
+  `Wikipedia <https://en.wikipedia.org/wiki/Network_Time_Protocol>`_,
+  `IETF <https://tools.ietf.org/html/rfc1305>`_
 
 Issues
 ======
 
-Please report any issues via
-`Github Issues <https://github.com/qtfkwk/kron/issues>`_.
+Please view/report any issues
+`here <https://github.com/qtfkwk/kron/issues>`_.
 
 Ideas
 =====
 
 * Command line tool
     * Timezone searching
+    * List formats
     * Duration calculations
 * Parser to find timestamps inside text/data/filesystems
 * Add clock, calendar/timeline, events...
+* Alternate output formats including visual/graphical...
 
 Author
 ======
 
 qtfkwk <qtfkwk+kron@gmail.com>
+
+Legal
+=====
+
+::
+
+    Copyright (c) 2016, qtfkwk
+    All rights reserved.
+    
+    Redistribution and use in source and binary forms, with or without
+    modification, are permitted provided that the following conditions are met:
+    
+    * Redistributions of source code must retain the above copyright notice, this
+      list of conditions and the following disclaimer.
+    
+    * Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+    
+    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+    AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+    DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+    FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+    DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+    CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+    OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 

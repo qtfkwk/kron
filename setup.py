@@ -1,9 +1,11 @@
 """
 :Name: kron
 :Description: Uniform interface for dates and times in Python
-:Version: 1.2.0
-:Author: qtfkwk <qtfkwk+kron@gmail.com>
+:Version: 1.3.0
 :File: setup.py
+:Author: qtfkwk <qtfkwk+kron@gmail.com>
+:Copyright: (C) 2016 by qtfkwk
+:License: BSD 2-Clause License (https://opensource.org/licenses/BSD-2-Clause)
 """
 
 # External modules
@@ -19,13 +21,24 @@ if __name__ == '__main__':
         url='https://github.com/qtfkwk/kron',
         author='qtfkwk',
         author_email='qtfkwk+kron@gmail.com',
-        version='1.2.0',
+        version='1.3.0',
         install_requires=[
+            'ntplib',
             'pytz',
             'tzlocal',
         ],
         py_modules=['kron'],
         description='Uniform interface for dates and times',
         entry_points=dict(console_scripts=['kron = kron:main']),
+        classifiers=[
+            'Development Status :: Production/Stable',
+            'Environment :: Console',
+            'Intended Audience :: Developers',
+            'Intended Audience :: End Users/Desktop',
+            'License :: OSI Approved :: BSD License',
+            'Operating System :: OS Independent',
+            'Topic :: Utilities',
+            'Topic :: Software Development :: Libraries :: Python Modules',
+        ],
     )
 

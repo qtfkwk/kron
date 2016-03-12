@@ -3,9 +3,11 @@
 """
 :Name: kron
 :Description: Uniform interface for dates and times in Python
-:Version: 1.2.0
-:Author: qtfkwk <qtfkwk+kron@gmail.com>
+:Version: 1.3.0
 :File: kron.py
+:Author: qtfkwk <qtfkwk+kron@gmail.com>
+:Copyright: (C) 2016 by qtfkwk
+:License: BSD 2-Clause License (https://opensource.org/licenses/BSD-2-Clause)
 """
 
 # Standard modules
@@ -14,12 +16,17 @@ import argparse
 import datetime
 import json
 import re
-import time
+import calendar
 
 # External modules
 
+import ntplib
 import pytz
 import tzlocal
+
+# Variables
+
+version = '1.3.0'
 
 # Classes
 
@@ -62,9 +69,10 @@ class timezone(object):
         self.name = self.search(name)
         if isinstance(self.name, list):
             if len(self.name) == 0:
-                raise TimezoneFailure
+                raise TimezoneFailure('No timezone found for "%s"' % name)
             else:
-                raise TimezoneMultiple
+                raise TimezoneMultiple('Found multiple possible timezones' + \
+                    ' for "%s": %s' % (name, ', '.join(self.name)))
         self.pytz = pytz.timezone(self.name)
 
 class duration(object):
@@ -179,6 +187,7 @@ class timestamp(object):
         national_date='%x',
         national_time='%X',
         rfc2822='%a, %d %b %Y %H:%M:%S %z',
+        rfc2822_='%a, %d %b %Y %H:%M:%S',
         seconds='%S',
         tz='%Z',
         tz_offset='%z',
@@ -195,23 +204,7 @@ class timestamp(object):
         yyyymmdd='%Y%m%d',
     )
 
-    @classmethod
-    def _time(cls, value=None, tz=None, fmt=None):
-        """standalone class method similar to time.time() but should
-        be more universally reliable; also processes a string
-        timestamp; output is float epoch seconds"""
-        if value == None:
-            d = datetime.datetime.now()
-        else:
-            d = datetime.datetime.strptime(value, cls._formats[fmt])
-        if fmt == 'iso8601':
-            tz = 'UTC'
-        d = timezone(tz).pytz.localize(d)
-        r = time.mktime(d.utctimetuple())
-        r += d.microsecond / float(10**6)
-        return r
-
-    def __init__(self, value=None, tz=None, fmt=None):
+    def __init__(self, value=None, tz=None, fmt=None, ntp=False):
         """initialize a timestamp object; internal storage is float
         epoch seconds with microsecond accuracy (values are rounded to
         6 decimal places)"""
@@ -221,7 +214,7 @@ class timestamp(object):
         re.search(r'^\d+\.?\d*$', value):
             self.value = float(value)
         else:
-            self.value = self._time(value, tz, fmt)
+            self.value = time(value, tz, fmt, ntp)
         self.value = round(self.value, 6)
 
     def __cmp__(self, y):
@@ -263,11 +256,12 @@ class timestamp(object):
         format; format may be a named format in the _formats
         dictionary, or any valid strftime format"""
         d = datetime.datetime.fromtimestamp(self.value)
-        d = pytz.utc.localize(d)
+        d = timezone().pytz.localize(d)
         if fmt == 'iso8601':
             tz = 'UTC'
-        tz = timezone(tz).pytz
-        d = tz.normalize(d.astimezone(tz))
+        if tz != pytz.utc:
+            tz = timezone(tz).pytz
+            d = tz.normalize(d.astimezone(tz))
         if fmt == None:
             fmt = 'basetz'
         return d.strftime(self._formats[fmt])
@@ -308,25 +302,84 @@ class timestamp(object):
 
 # Functions
 
+def time_utc(epoch=None, tz=None):
+    """similar to time.time(); output is float epoch seconds in utc"""
+    if epoch == None:
+        d = datetime.datetime.now()
+    elif isinstance(epoch, (int, float)):
+        d = datetime.datetime.fromtimestamp(epoch)
+    elif isinstance(epoch, datetime.datetime):
+        d = epoch
+    else:
+        raise TimeEpochError('epoch must be None, int, float, or datetime')
+    d = timezone(tz).pytz.localize(d)
+    r = calendar.timegm(d.utctimetuple())
+    r += d.microsecond / float(10**6)
+    return r
+
+def time_ntp(server='pool.ntp.org'):
+    """similar to time.time() except uses ntp and output is float
+    epoch seconds in utc"""
+    c = ntplib.NTPClient()
+    try:
+        res = c.request(server, version=3)
+    except:
+        raise NTPError
+    # convert from seconds since 1900 to seconds since 1970
+    r = res.tx_timestamp - 2208988800L
+    # convert to utc
+    r = time_utc(r)
+    return r
+
+def time(value=None, tz=None, fmt=None, ntp=False):
+    """similar to time.time() but more flexible and consistent;
+    optionally uses ntp or processes a string timestamp; output is
+    float epoch seconds in utc"""
+    if value == None:
+        # now
+        if tz != None:
+            raise TimeTimezoneError('defined tz while value is None')
+        if fmt != None:
+            raise TimeFormatError('defined fmt while value is None')
+        if ntp:
+            try:
+                r = time_ntp()
+            except NTPError:
+                r = time_utc()
+        else:
+            r = time_utc()
+    else:
+        # process as a string timestamp
+        d = datetime.datetime.strptime(value, timestamp._formats[fmt])
+        if fmt == 'iso8601':
+            tz = 'UTC'
+        r = time_utc(d, tz)
+    return r
+
 def _json(obj):
     """drop-in replacement for json.dumps()"""
     return json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
 
 def cli(argv=None):
+    """backend function for command line interface"""
     p = argparse.ArgumentParser()
-    p.add_argument('-t', metavar='TIMEZONE', action='append', default=[], \
-        help=('output timezone'))
-    p.add_argument('-f', metavar='FORMAT', action='append', default=[], \
-        help=('output format'))
+    p.add_argument('-V', '--version', action='store_true', \
+        help='print version and exit')
     p.add_argument('-T', metavar='TIMEZONE', action='store', \
-        help=('input timezone'))
+        help='input timezone; default: local timezone')
     p.add_argument('-F', metavar='FORMAT', action='store', \
-        help=('input format'))
+        help='input format; default: "base" ("%%Y-%%m-%%d %%H:%%M:%%S")')
+    p.add_argument('-t', metavar='TIMEZONE', action='append', default=[], \
+        help='output timezone; default: local timezone')
+    p.add_argument('-f', metavar='FORMAT', action='append', default=[], \
+        help='output format; default: "basetz" ("%%Y-%%m-%%d %%H:%%M:%%S %%Z")')
     p.add_argument('args', metavar='ARG', action='store', nargs='*', \
-        help=('one or more timestamp input values; int/float epoch seconds,' + \
-        ' timestamp string in base or any format specified by -F;' + \
-        ' default: now'))
+        help='one or more timestamps; int/float epoch seconds,' + \
+        ' string in the base format or the format specified by -F;' + \
+        ' default: now')
     a = p.parse_args(argv)
+    if a.version:
+        return version
     for i in (a.args, a.t, a.f):
         if i == None:
             i = []
@@ -340,6 +393,7 @@ def cli(argv=None):
     return _json(r)
 
 def main():
+    """main function"""
     import sys
     print cli(sys.argv[1:])
 
@@ -367,6 +421,18 @@ class TimestampMultiplyError(KronError):
     pass
 
 class TimestampDivideError(KronError):
+    pass
+
+class TimeTimezoneError(KronError):
+    pass
+
+class TimeFormatError(KronError):
+    pass
+
+class NTPError(KronError):
+    pass
+
+class TimeEpochError(KronError):
     pass
 
 # Main
