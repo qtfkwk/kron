@@ -1,12 +1,18 @@
 #!/usr/bin/env python
 
 # Name: kron
-# Description: Uniform interface for dates and times in Python
-# Version: 1.3.2
+# Description: Uniform interface for dates and times
+# Version: 1.4.0
 # File: kron.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
 # License: BSD 2-Clause License (https://opensource.org/licenses/BSD-2-Clause)
+
+"""Uniform interface for dates and times
+
+* Documentation: https://pythonhosted.org/kron
+* API Reference: https://pythonhosted.org/kron/#api-reference
+"""
 
 # Standard modules
 
@@ -24,68 +30,53 @@ import tzlocal
 
 # Variables
 
-version = '1.3.2'
+version = '1.4.0'
 
 # Classes
 
-class timezone(object):
-    """represent timezone, provide search mechanism, default to local
-    timezone"""
-
-    @classmethod
-    def search(cls, name=None):
-        """resolve timezone given a name
-
-        if name is...
-        * None: returns local timezone name
-        * string that is an exact match in proper or lower case:
-          itself
-        * empty string ('') or wildcard regular expression ('.*'):
-          returns all timezone names
-        * any other string: used as a regular expression; multiple or
-          zero matches returns a list"""
-        if name == None:
-            return tzlocal.get_localzone().zone
-        if name in pytz.all_timezones:
-            return name
-        name_ = name.lower()
-        matches = []
-        for t in pytz.all_timezones:
-            t_ = t.lower()
-            if name_ == t_:
-                return t
-            if re.search(name, t) or re.search(name_, t_):
-                matches.append(t)
-        if len(matches) == 1:
-            return matches[0]
-        else:
-            return matches
-
-    def __init__(self, name=None):
-        """initialize a timezone object"""
-        self.original = name
-        self.name = self.search(name)
-        if isinstance(self.name, list):
-            if len(self.name) == 0:
-                raise TimezoneFailure('No timezone found for "%s"' % name)
-            else:
-                raise TimezoneMultiple('Found multiple possible timezones' + \
-                    ' for "%s": %s' % (name, ', '.join(self.name)))
-        self.pytz = pytz.timezone(self.name)
-
 class duration(object):
-    """represent a duration of time"""
+    """Represents a duration of time
+    
+    ``value`` is float seconds.
+
+    Internal storage is float seconds and accessible via the ``value``
+    property.
+
+    Duration objects can be compared via ``<``, ``>``, ``<=``, ``>=``,
+    ``==``, and ``!=`` with each other or an int/float value in
+    seconds.
+
+    Duration objects support various arithmetic operations via ``+``,
+    ``-``, ``*``, ``/``.
+
+    +----------+----------------------+---------------+
+    | Operator | Other type           | Returned type |
+    +==========+======================+===============+
+    | ``+``    | timestamp            | timestamp     |
+    +          +----------------------+---------------+
+    |          | int, float, duration | duration      |
+    +----------+----------------------+---------------+
+    | ``-``    | int, float, duration | duration      |
+    +----------+----------------------+---------------+
+    | ``*``    | int, float           | duration      |
+    +----------+----------------------+---------------+
+    | ``/``    | int, float           | duration      |
+    +----------+----------------------+---------------+
+
+    Arithmetic operations with a type not listed in the above table
+    raises one of ``DurationAddError``, ``DurationDivideError``,
+    ``DurationMultipyError``, or ``DurationSubstractError``.
+    """
 
     _units = ('days', 'hours', 'minutes', 'seconds')
     _values = dict(days=86400, hours=3600, minutes=60, seconds=1)
 
     def __init__(self, value=0):
-        """initialize a duration object"""
         self.value = round(value, 6)
 
     def dict(self):
-        """return a dictionary with duration represented as common
-        units of time"""
+        """Returns a dictionary with the duration as the count of
+        days, hours, minutes, seconds, and microseconds"""
         v = int(self.value)
         r = dict(days=0, hours=0, minutes=0, seconds=0)
         r['microseconds'] = int((self.value - v) * 10**6 + 0.5)
@@ -95,40 +86,44 @@ class duration(object):
         return r
 
     def __cmp__(self, y):
-        """compare two duration objects"""
+        """Compare two duration objects"""
         if isinstance(y, duration):
             return cmp(self.value, y.value)
 
     def __add__(self, y):
-        """add two durations or a duration and an int or float"""
-        if isinstance(y, duration):
+        """Add two durations or a duration and an int or float"""
+        if isinstance(y, (duration, timestamp)):
             return duration(self.value + y.value)
         elif isinstance(y, (int, float)):
             return duration(self.value + y)
+        else:
+            raise DurationAddError
 
     def __sub__(self, y):
-        """subtract two durations or a duration and an int or float"""
+        """Subtract two durations or a duration and an int or float"""
         if isinstance(y, duration):
             return duration(self.value - y.value)
         elif isinstance(y, (int, float)):
             return duration(self.value - y)
+        else:
+            raise DurationSubtractError
 
     def __mul__(self, y):
-        """multiply a duration by an int or float"""
+        """Multiply a duration by an int or float"""
         if isinstance(y, (int, float)):
             return duration(self.value * y)
         else:
             raise DurationMultiplyError
 
     def __div__(self, y):
-        """divide a duration by an int or float"""
+        """Divide a duration by an int or float"""
         if isinstance(y, (int, float)):
             return duration(self.value / y)
         else:
             raise DurationDivideError
 
 class _bdict(dict):
-    """enhanced dictionary to store the formats"""
+    """Enhanced dictionary used to store the formats"""
 
     def __missing__(self, key):
         if key == None:
@@ -136,16 +131,40 @@ class _bdict(dict):
         return self[key] if key in self else key
 
 class timestamp(object):
-    """represent a specific point in time, provide multiple ways of
-    defining it and translating to other timezones and/or formats
+    """Represents a specific point in time
+    
+    ``value`` can be:
 
-    inputs
-    * None: now
-    * epoch seconds as int or float in UTC
-    * string in base or some other format and/or timezone
+    * int/float in epoch seconds in UTC or a string that looks like
+      one: sets the value directly
+    * Anything else is passed to the ``time`` function along with the
+      values of the ``tz``, ``fmt``, and ``ntp`` arguments
+
+    Internal storage is float epoch seconds in UTC and accessible via
+    the ``value`` property.
+
+    Timestamp objects can be compared via ``<``, ``>``, ``<=``, ``>=``,
+    ``==``, and ``!=`` with each other.
+
+    Timestamp objects support various arithmetic operations via ``+``
+    and ``-``.
+
+    +----------+----------------------+---------------+
+    | Operator | Other type           | Returned type |
+    +==========+======================+===============+
+    | ``+``    | int, float, duration | timestamp     |
+    +----------+----------------------+---------------+
+    | ``-``    | int, float, duration | timestamp     |
+    +          +----------------------+---------------+
+    |          | timestamp            | duration      |
+    +----------+----------------------+---------------+
+
+    Arithmetic operations with a type not listed in the above table
+    raises one of ``TimestampAddError``, ``TimestampDivideError``,
+    ``TimestampMultipyError``, or ``TimestampSubstractError``.
     """
 
-    _formats = _bdict(
+    formats = _bdict(
         base='%Y-%m-%d %H:%M:%S',
         basetz='%Y-%m-%d %H:%M:%S %Z',
         HH='%H',
@@ -203,9 +222,6 @@ class timestamp(object):
     )
 
     def __init__(self, value=None, tz=None, fmt=None, ntp=False):
-        """initialize a timestamp object; internal storage is float
-        epoch seconds with microsecond accuracy (values are rounded to
-        6 decimal places)"""
         if isinstance(value, (int, float)):
             self.value = float(value)
         elif isinstance(value, (str, unicode)) and \
@@ -216,14 +232,14 @@ class timestamp(object):
         self.value = round(self.value, 6)
 
     def __cmp__(self, y):
-        """compare two timestamps"""
+        """Compare two timestamps"""
         if isinstance(y, timestamp):
             return cmp(self.value, y.value)
         else:
             raise TimestampComparisonError
 
     def __sub__(self, y):
-        """subtract two timestamps to produce a duration object, or a
+        """Subtract two timestamps to produce a duration object, or a
         duration, int, or float from a timestamp to produce a new
         timestamp object"""
         if isinstance(y, timestamp):
@@ -234,7 +250,7 @@ class timestamp(object):
             return timestamp(self.value - y)
 
     def __add__(self, y):
-        """add a duration, int, or float to a timestamp to produce a
+        """Add a duration, int, or float to a timestamp to produce a
         new timestamp object"""
         if isinstance(y, duration):
             return timestamp(self.value + y.value)
@@ -242,17 +258,16 @@ class timestamp(object):
             return timestamp(self.value + y)
 
     def __mul__(self, y):
-        """cannot multiply a timestamp"""
+        """Cannot multiply a timestamp"""
         raise TimestampMultiplyError
 
     def __div__(self, y):
-        """cannot divide a timestamp"""
+        """Cannot divide a timestamp"""
         raise TimestampDivideError
 
     def str(self, tz=None, fmt=None):
-        """output the timestamp as a string in the given timezone and
-        format; format may be a named format in the _formats
-        dictionary, or any valid strftime format"""
+        """Returns the timestamp as a string in the local or given
+        timezone and the 'basetz' or given format"""
         d = datetime.datetime.fromtimestamp(self.value)
         d = timezone().pytz.localize(d)
         if fmt == 'iso8601':
@@ -262,23 +277,27 @@ class timestamp(object):
             d = tz.normalize(d.astimezone(tz))
         if fmt == None:
             fmt = 'basetz'
-        return d.strftime(self._formats[fmt])
+        return d.strftime(self.formats[fmt])
 
     def utc(self, fmt='basetz'):
-        """utc timezone helper"""
+        """Returns the timestamp as a string in the UTC timezone and
+        the 'basetz' or given format"""
         return self.str('UTC', fmt)
 
     def rfc2822(self, tz=None):
-        """rfc2822 format helper"""
+        """Returns the timestamp as a string in the local or given
+        timezone and the 'rfc2822' format"""
         return self.str(tz, 'rfc2822')
 
     def iso8601(self):
-        """iso8601 timezone/format helper"""
+        """Returns the timestamp as a string in the UTC timezone
+        (implied) and the 'iso8601' format"""
         return self.str(fmt='iso8601')
 
     def dict(self, tz=[None], fmt=['basetz']):
-        """convert the timestamp to multiple timezones and/or formats
-        and return results as a dictionary"""
+        """Returns the timestamp as a dictionary with keys as the
+        given timezones and values as dictionaries with keys as the
+        given formats (default: 'basetz')"""
         if not isinstance(tz, list):
             tz = [tz]
         if not isinstance(fmt, list):
@@ -295,44 +314,139 @@ class timestamp(object):
         return r
 
     def json(self, tz=[None], fmt=['basetz']):
-        """convert the dict to a pretty-printed json string"""
+        """Returns the dictionary produced by the ``dict`` method as a
+        pretty-printed JSON string"""
         return _json(self.dict(tz, fmt))
+
+class timezone(object):
+    """Represent a timezone
+
+    ``name`` is stored in the ``original`` property, and resolved to a
+    timezone name via ``timezone.search``, which is stored in the
+    ``name`` property.
+
+    A pytz object is created for the given name and accessible via the
+    ``pytz`` property.
+    """
+
+    def __init__(self, name=None):
+        self.original = name
+        self.name = self.search(name)
+        if isinstance(self.name, list):
+            if len(self.name) == 0:
+                raise TimezoneFailure('No timezone found for "%s"' % name)
+            else:
+                raise TimezoneMultiple('Found multiple possible timezones' + \
+                    ' for "%s": %s' % (name, ', '.join(self.name)))
+        self.pytz = pytz.timezone(self.name)
+
+    @classmethod
+    def search(cls, name=None):
+        """Resolve timezone given a name
+
+        ``name`` can be:
+
+        * omitted or None: returns name of the local timezone
+        * string matching a timezone name in ``pytz.all_timezones``:
+          returns the timezone name in proper case
+        * empty string ('') or wildcard regular expression ('.*'):
+          returns a list with all timezone names
+        * any other string: used as a regular expression; multiple or
+          zero matches returns a list with the matched timezone names
+        """
+        if name == None:
+            return tzlocal.get_localzone().zone
+        if name in pytz.all_timezones:
+            return name
+        name_ = name.lower()
+        matches = []
+        for t in pytz.all_timezones:
+            t_ = t.lower()
+            if name_ == t_:
+                return t
+            if re.search(name, t) or re.search(name_, t_):
+                matches.append(t)
+        if len(matches) == 1:
+            return matches[0]
+        else:
+            return matches
+
+# Error classes
+
+class KronError(Exception):
+    """Base exception class"""
+    pass
+
+class DurationAddError(KronError):
+    """"""
+    pass
+
+class DurationDivideError(KronError):
+    """"""
+    pass
+
+class DurationMultiplyError(KronError):
+    """"""
+    pass
+
+class DurationSubtractError(KronError):
+    """"""
+    pass
+
+class NTPError(KronError):
+    """"""
+    pass
+
+class TimeEpochError(KronError):
+    """"""
+    pass
+
+class TimeFormatError(KronError):
+    """"""
+    pass
+
+class TimeTimezoneError(KronError):
+    """"""
+    pass
+
+class TimestampComparisonError(KronError):
+    """"""
+    pass
+
+class TimestampMultiplyError(KronError):
+    """"""
+    pass
+
+class TimestampDivideError(KronError):
+    """"""
+    pass
+
+class TimezoneFailure(KronError):
+    """"""
+    pass
+
+class TimezoneMultiple(KronError):
+    """"""
+    pass
 
 # Functions
 
-def time_utc(epoch=None, tz=None):
-    """similar to time.time(); output is float epoch seconds in utc"""
-    if epoch == None:
-        d = datetime.datetime.now()
-    elif isinstance(epoch, (int, float)):
-        d = datetime.datetime.fromtimestamp(epoch)
-    elif isinstance(epoch, datetime.datetime):
-        d = epoch
-    else:
-        raise TimeEpochError('epoch must be None, int, float, or datetime')
-    d = timezone(tz).pytz.localize(d)
-    r = calendar.timegm(d.utctimetuple())
-    r += d.microsecond / float(10**6)
-    return r
-
-def time_ntp(server='pool.ntp.org'):
-    """similar to time.time() except uses ntp and output is float
-    epoch seconds in utc"""
-    c = ntplib.NTPClient()
-    try:
-        res = c.request(server, version=3)
-    except:
-        raise NTPError
-    # convert from seconds since 1900 to seconds since 1970
-    r = res.tx_timestamp - 2208988800L
-    # convert to utc
-    r = time_utc(r)
-    return r
-
 def time(value=None, tz=None, fmt=None, ntp=False):
-    """similar to time.time() but more flexible and consistent;
-    optionally uses ntp or processes a string timestamp; output is
-    float epoch seconds in utc"""
+    """Primitive functional interface for the ``timestamp`` class;
+    similar to ``time.time()``, except more flexible and consistent;
+    optionally attempts to use NTP with a fallback to use system time;
+    can also process a string timestamp; returns float epoch seconds
+    in UTC
+
+    ``value`` can be:
+
+    * omitted or None: use current date and time now (via system time
+      if ``ntp`` is False (default) or NTP if ``ntp`` is True); raises
+      ``TimeTimezoneError`` if ``tz`` is specified or
+      ``TimeFormatError`` if ``fmt`` is specified
+    * string timestamp in the ``base`` format or given by ``fmt`` and
+      the local timezone or given by ``tz``
+    """
     if value == None:
         # now
         if tz != None:
@@ -348,18 +462,59 @@ def time(value=None, tz=None, fmt=None, ntp=False):
             r = time_utc()
     else:
         # process as a string timestamp
-        d = datetime.datetime.strptime(value, timestamp._formats[fmt])
+        d = datetime.datetime.strptime(value, timestamp.formats[fmt])
         if fmt == 'iso8601':
             tz = 'UTC'
         r = time_utc(d, tz)
     return r
 
-def _json(obj):
-    """drop-in replacement for json.dumps()"""
-    return json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+def time_ntp(server='pool.ntp.org'):
+    """Similar to ``time_utc``, except uses NTP
 
-def cli(argv=None):
-    """backend function for command line interface"""
+    ``server`` can be any Internet or other network-based NTP server.
+
+    ``time_ntp`` raises ``NTPError`` if it fails to retrieve the time
+    from the server.
+    """
+    c = ntplib.NTPClient()
+    try:
+        res = c.request(server, version=3)
+    except:
+        raise NTPError
+    # convert from seconds since 1900 to seconds since 1970
+    r = res.tx_timestamp - 2208988800L
+    # convert to utc
+    r = time_utc(r)
+    return r
+
+def time_utc(epoch=None, tz=None):
+    """Similar to ``time.time()``, except always returns float epoch
+    seconds in UTC
+
+    ``epoch`` argument can be one of the following; otherwise it
+    raises ``TimeEpochError``.
+
+    * omitted or None: use current date and time now (via system time)
+    * int/float: epoch seconds in UTC
+    * datetime.datetime object
+    
+    ``tz`` is passed to ``timezone()``.
+    """
+    if epoch == None:
+        d = datetime.datetime.now()
+    elif isinstance(epoch, (int, float)):
+        d = datetime.datetime.fromtimestamp(epoch)
+    elif isinstance(epoch, datetime.datetime):
+        d = epoch
+    else:
+        raise TimeEpochError('epoch must be None, int, float, or datetime')
+    d = timezone(tz).pytz.localize(d)
+    r = calendar.timegm(d.utctimetuple())
+    r += d.microsecond / float(10**6)
+    return r
+
+def _cli(argv=None):
+    """Backend function for command line interface"""
     p = argparse.ArgumentParser()
     p.add_argument('-V', '--version', action='store_true', \
         help='print version and exit')
@@ -390,50 +545,17 @@ def cli(argv=None):
         r[i if i != None else 'now'] = timestamp(i, a.T, a.F).dict(a.t, a.f)
     return _json(r)
 
-def main():
-    """main function"""
+def _main():
+    """Frontend function for command line interface"""
     import sys
     print cli(sys.argv[1:])
 
-# Error classes
-
-class KronError(Exception):
-    pass
-
-class TimezoneFailure(KronError):
-    pass
-
-class TimezoneMultiple(KronError):
-    pass
-
-class DurationMultiplyError(KronError):
-    pass
-
-class DurationDivideError(KronError):
-    pass
-
-class TimestampComparisonError(KronError):
-    pass
-
-class TimestampMultiplyError(KronError):
-    pass
-
-class TimestampDivideError(KronError):
-    pass
-
-class TimeTimezoneError(KronError):
-    pass
-
-class TimeFormatError(KronError):
-    pass
-
-class NTPError(KronError):
-    pass
-
-class TimeEpochError(KronError):
-    pass
+def _json(obj):
+    """Drop-in replacement for json.dumps() with pretty-printing"""
+    return json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
 
 # Main
 
 if __name__ == '__main__':
-    main()
+    _main()
+

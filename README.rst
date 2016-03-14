@@ -6,7 +6,8 @@ Features
   (`ntplib <https://pypi.python.org/pypi/ntplib>`_,
   `pytz <https://pypi.python.org/pypi/pytz>`_,
   `tzlocal <https://pypi.python.org/pypi/tzlocal>`_)
-* Microsecond accuracy
+* Microsecond accuracy (float epoch seconds are *rounded* to 6 decimal
+  places)
 * Timestamp internal storage is float epoch seconds in UTC
 * Duration internal storage is float seconds
 * Timezone name search by regular expression
@@ -14,34 +15,26 @@ Features
 * Comparison and arithmetic methods for timestamps and durations
 * Test-driven development methodology
 * Named formats
-* Helper methods for timezones and formats
+* Timestamp object "helper" methods for timezones and formats
 * Command line tool
+* Substitutes for ``time.time()``: time, time_ntp, time_utc
 
-Installation
-============
+Quick start
+===========
+
+Install
+-------
 
 ::
 
     $ pip install kron
 
-Or::
-
-    $ git clone https://github.com/qtfkwk/kron.git
-    $ cd kron
-    $ python setup.py install
-
 Update
-======
+------
 
 ::
 
     $ pip install -U kron
-
-Or::
-
-    $ cd kron
-    $ git pull
-    $ python setup.py install
 
 Examples
 ========
@@ -78,62 +71,6 @@ Python code/interpreter
     'Mon Nov 02 14:50:42 EST 2009'
     >>> t.str(fmt='rfc2822')
     'Mon, 02 Nov 2009 14:50:42 -0500'
-    >>> for fmt in sorted(t._formats):
-    ...     print '%s: "%s" => "%s"' % (fmt, t._formats[fmt], t.str(fmt=fmt))
-    ...
-    HH: "%H" => "14"
-    HHMM: "%H%M" => "1450"
-    HHMMSS: "%H%M%S" => "145042"
-    HH_MM: "%H:%M" => "14:50"
-    HH_MM_SS: "%H:%M:%S" => "14:50:42"
-    MM: "%M" => "50"
-    SS: "%S" => "42"
-    abbr_date: "%a, %b %d, %Y" => "Mon, Nov 02, 2009"
-    abbr_month: "%b" => "Nov"
-    abbr_weekday: "%a" => "Mon"
-    ampm: "%p" => "PM"
-    base: "%Y-%m-%d %H:%M:%S" => "2009-11-02 14:50:42"
-    ccyy: "%Y" => "2009"
-    ccyymm: "%Y%m" => "200911"
-    ccyymmdd: "%Y%m%d" => "20091102"
-    date: "%A, %B %d, %Y" => "Monday, November 02, 2009"
-    dd: "%d" => "02"
-    hh: "%I" => "02"
-    hh_MM: "%I:%M" => "02:50"
-    hh_MM_SS: "%I:%M:%S" => "02:50:42"
-    hh_MM_SS_ampm: "%I:%M:%S %p" => "02:50:42 PM"
-    hh_MM_ampm: "%I:%M %p" => "02:50 PM"
-    hours: "%H" => "14"
-    hours12: "%I" => "02"
-    hours24: "%H" => "14"
-    iso8601: "%Y-%m-%dT%H:%M:%SZ" => "2009-11-02T19:50:42Z"
-    julian: "%j" => "306"
-    local: "%Y-%m-%d %H:%M:%S %Z" => "2009-11-02 14:50:42 EST"
-    microseconds: "%f" => "000000"
-    minutes: "%M" => "50"
-    mm: "%m" => "11"
-    mm_dd_yy: "%m/%d/%y" => "11/02/09"
-    mmdd: "%m%d" => "1102"
-    mon: "%b" => "Nov"
-    month: "%B" => "November"
-    national: "%a %b %d %X %Z %Y" => "Mon Nov 02 14:50:42 EST 2009"
-    national_date: "%x" => "11/02/09"
-    national_time: "%X" => "14:50:42"
-    rfc2822: "%a, %d %b %Y %H:%M:%S %z" => "Mon, 02 Nov 2009 14:50:42 -0500"
-    seconds: "%S" => "42"
-    tz: "%Z" => "EST"
-    tz_offset: "%z" => "-0500"
-    week_number_mon: "%W" => "44"
-    week_number_sun: "%U" => "44"
-    weekday: "%A" => "Monday"
-    year: "%Y" => "2009"
-    yy: "%y" => "09"
-    yymm: "%y%m" => "0911"
-    yymmdd: "%y%m%d" => "091102"
-    yyyy: "%Y" => "2009"
-    yyyy_mm_dd: "%Y/%m/%d" => "2009/11/02"
-    yyyymm: "%Y%m" => "200911"
-    yyyymmdd: "%Y%m%d" => "20091102"
     >>> t = timestamp('1999-10-12 01:18:43', 'UTC')
     >>> t.value
     939709123.0
@@ -159,20 +96,20 @@ Command line tool
 ::
 
     $ kron -h
-    usage: kron.py [-h] [-T TIMEZONE] [-F FORMAT] [-t TIMEZONE] [-f FORMAT]
+    usage: kron.py [-h] [-V] [-T TIMEZONE] [-F FORMAT] [-t TIMEZONE] [-f FORMAT]
                    [ARG [ARG ...]]
     
     positional arguments:
-      ARG          one or more timestamp input values; int/float epoch seconds,
-                   timestamp string in base or any format specified by -F;
-                   default: now
+      ARG            one or more timestamps; int/float epoch seconds, string in
+                     the base format or the format specified by -F; default: now
     
     optional arguments:
-      -h, --help   show this help message and exit
-      -T TIMEZONE  input timezone; default: local timezone
-      -F FORMAT    input format; default: "base" ("%Y-%m-%d %H:%M:%S")
-      -t TIMEZONE  output timezone; default: local timezone
-      -f FORMAT    output format; default: "basetz" ("%Y-%m-%d %H:%M:%S %Z")
+      -h, --help     show this help message and exit
+      -V, --version  print version and exit
+      -T TIMEZONE    input timezone; default: local timezone
+      -F FORMAT      input format; default: "base" ("%Y-%m-%d %H:%M:%S")
+      -t TIMEZONE    output timezone; default: local timezone
+      -f FORMAT      output format; default: "basetz" ("%Y-%m-%d %H:%M:%S %Z")
     $ kron
     2016-03-11 00:41:46 EST
     $ kron -t utc
@@ -200,60 +137,74 @@ Command line tool
         }
     }
 
-Versions
-========
-
-* 1.0.0 (2016-03-05): Initial release
-* 1.0.1 (2016-03-05): Finished rename
-* 1.1.0 (2016-03-06): More formats, improved documentation, fix
-  `issue #1 <https://github.com/qtfkwk/kron/issues/1>`_
-* 1.1.1 (2016-03-06): Added description to setup.py
-* 1.2.0 (2016-03-08): Helper methods for timezone and formats;
-  command line tool
-* 1.3.0 (2016-03-11): Converted timestamp internal storage to UTC
-  (`issue #2 <https://github.com/qtfkwk/kron/issues/2>`_);
-  added Network Time Protocol (RFC 1305) functionality via ntplib
-  module; added time, time_ntp, time_utc functions; improved
-  documentation
-* 1.3.1 (2016-03-11): Added version test
-* 1.3.2 (2016-03-11): Fixed classifers
-
 Discussion
 ==========
 
-Dates and times are not one of Python's strengths. Even doing basic
-work requires using multiple standard and non-standard modules and
-effort to get it right. This module seeks to leverage the necessary
-modules for handling dates and times but provide a simple and uniform
-interface for doing so.
+Dates and times are not one of Python's strengths. Doing basic work
+requires using multiple standard and non-standard modules and effort
+to get it right. This module leverages the necessary modules for
+handling dates and times but provides a simple and uniform interface
+for doing so.
 
 Background
 ==========
 
-Kron was started as a portfolio project to demonstrate proficiency in
+Kron begun as a portfolio project to demonstrate proficiency in
 Python as well as practice the test-driven development (TDD) process
 in concert with git and Github. The topic was selected to address some
 personal points of pain experienced while working with dates and times
 in Python.
 
 The importance of correct representation of dates and times in the
-area of digital forensics cases cannot be overstated. While a myriad
-of poorly designed and implemented code contribute, the *core problem*
-is the absence of a simple abstraction to represent a specific point
-in time.
+area of digital forensics and other fields cannot be overstated. While
+a myriad of poorly designed and implemented code contribute, the
+**core problem** is the absence of a simple abstraction to represent a
+specific point in time.
 
-Kron drastically simplifies working with dates and times by making the
-central "timestamp" class represent a specific point in time, and
-enabling it to be created, modified, and viewed in a few natural ways.
+Kron is built around the "timestamp" class, which represents a
+specific point in time. Timestamp objects can be created, modified,
+and viewed in a few *natural* ways.
 
-See also
+The "duration" class represent a duration of time, which is also the
+difference of two timestamp objects.
+
+The "timezone" class is provided to simplify specifying a timezone by
+allowing a partial string or regular expression to search for the
+proper name.
+
+Versions
 ========
 
-* Kron at `PyPI <https://pypi.python.org/pypi/kron>`_,
-  `Github <https://github.com/qtfkwk/kron>`_
-* Network Time Protocol (RFC 1305) at
-  `Wikipedia <https://en.wikipedia.org/wiki/Network_Time_Protocol>`_,
-  `IETF <https://tools.ietf.org/html/rfc1305>`_
++---------+------------+---------------------------------------------+
+| Version | Date       | Description                                 |
++=========+============+=============================================+
+| 1.0.0   | 2016-03-05 | Initial release                             |
++---------+------------+---------------------------------------------+
+| 1.0.1   | 2016-03-05 | Finished rename                             |
++---------+------------+---------------------------------------------+
+| 1.1.0   | 2016-03-06 | More formats, improved documentation, fix   |
+|         |            | `issue #1                                   |
+|         |            | <https://github.com/qtfkwk/kron/issues/1>`_ |
++---------+------------+---------------------------------------------+
+| 1.1.1   | 2016-03-06 | Added description to setup.py               |
++---------+------------+---------------------------------------------+
+| 1.2.0   | 2016-03-08 | Helper methods for timezone and formats;    |
+|         |            | command line tool                           |
++---------+------------+---------------------------------------------+
+| 1.3.0   | 2016-03-11 | Converted timestamp internal storage to UTC |
+|         |            | (`issue #2                                  |
+|         |            | <https://github.com/qtfkwk/kron/issues/2>`_ |
+|         |            | ); added Network Time Protocol (RFC 1305)   |
+|         |            | functionality via ntplib module; added      |
+|         |            | time, time_ntp, time_utc functions;         |
+|         |            | improved documentation                      |
++---------+------------+---------------------------------------------+
+| 1.3.1   | 2016-03-11 | Added version test                          |
++---------+------------+---------------------------------------------+
+| 1.3.2   | 2016-03-11 | Fixed classifers                            |
++---------+------------+---------------------------------------------+
+| 1.4.0   | 2016-03-13 | Improved documentation                      |
++---------+------------+---------------------------------------------+
 
 Issues
 ======
@@ -261,24 +212,100 @@ Issues
 Please view/report any issues
 `here <https://github.com/qtfkwk/kron/issues>`_.
 
+Developers
+==========
+
+Download source
+---------------
+
+::
+
+    $ git clone https://github.com/qtfkwk/kron.git
+
+Install from source
+-------------------
+
+::
+
+    $ cd kron
+    $ python setup.py install
+
+Update
+------
+
+::
+
+    $ cd kron
+    $ git pull
+    $ python setup.py install
+
+Build distributions
+-------------------
+
+::
+
+    $ cd kron
+    $ python setup.py sdist
+    $ python setup.py bdist_wheel
+
+Build documentation
+-------------------
+
+::
+
+    $ cd kron
+    $ make -C doc html
+
 Ideas
 =====
 
+* Python 3
 * Command line tool
+
     * Timezone searching
     * List formats
     * Duration calculations
+
 * Parser to find timestamps inside text/data/filesystems
 * Add clock, calendar/timeline, events...
 * Alternate output formats including visual/graphical...
 
+See also
+========
+
+* Kron: `PyPI <https://pypi.python.org/pypi/kron>`_,
+  `Github <https://github.com/qtfkwk/kron>`_,
+  `Documentation <https://pythonhosted.org/kron>`_,
+  `API Reference <https://pythonhosted.org/kron/#id5>`_
+* Python built-in modules
+
+    * `calendar <http://docs.python.org/library/calendar.html>`_
+    * `datetime <http://docs.python.org/library/datetime.html>`_
+    * `time <http://docs.python.org/library/time.html>`_
+
+* Python non-standard modules at PyPI
+
+    * `ntplib <https://pypi.python.org/pypi/ntplib>`_
+    * `pytz <https://pypi.python.org/pypi/pytz>`_
+    * `tzlocal <https://pypi.python.org/pypi/tzlocal>`_
+
+* Network Time Protocol (RFC 1305) at
+  `Wikipedia <https://en.wikipedia.org/wiki/Network_Time_Protocol>`_,
+  `IETF <https://tools.ietf.org/html/rfc1305>`_
+* ``strftime`` at
+  `linux.die.net <http://linux.die.net/man/3/strftime>`_,
+  `Python time.strftime
+  <https://docs.python.org/2/library/time.html#time.strftime>`_
+
 Author
 ======
 
-qtfkwk <qtfkwk+kron@gmail.com>
+"qtfkwk"
+qtfkwk+kron@gmail.com,
+`@qtfimik <https://twitter.com/qtfimik>`_
 
-Legal
-=====
+License
+=======
 
 ::
 

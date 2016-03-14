@@ -1,6 +1,6 @@
 # Name: kron
-# Description: Uniform interface for dates and times in Python
-# Version: 1.3.2
+# Description: Uniform interface for dates and times
+# Version: 1.4.0
 # File: setup.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
@@ -9,6 +9,10 @@
 # External modules
 
 import setuptools
+
+# Internal modules
+
+import kron
 
 # Main
 
@@ -19,7 +23,7 @@ if __name__ == '__main__':
         url='https://github.com/qtfkwk/kron',
         author='qtfkwk',
         author_email='qtfkwk+kron@gmail.com',
-        version='1.3.2',
+        version=kron.version,
         install_requires=[
             'ntplib',
             'pytz',

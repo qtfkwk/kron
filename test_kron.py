@@ -1,6 +1,6 @@
 # Name: kron
-# Description: Uniform interface for dates and times in Python
-# Version: 1.3.2
+# Description: Uniform interface for dates and times
+# Version: 1.4.0
 # File: test_kron.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
@@ -9,6 +9,7 @@
 # Variables
 
 skip_network_tests = False
+additional_ntp_servers = ['us.pool.ntp.org']
 
 # Standard modules
 
@@ -171,6 +172,12 @@ class Test(unittest.TestCase):
         def divide_durations():
             return d1 / d2
         self.assertRaises(kron.DurationDivideError, divide_durations)
+        def add_duration_string():
+            return d1 + 'impossible'
+        self.assertRaises(kron.DurationAddError, add_duration_string)
+        def subtract_duration_string():
+            return d1 - 'impossible'
+        self.assertRaises(kron.DurationSubtractError, subtract_duration_string)
 
     def test_timestamp_default(self):
         h = kron.timestamp()
@@ -448,7 +455,7 @@ class Test(unittest.TestCase):
         a = ['1457128501']
         t = ['UTC']
         f = []
-        h = kron.cli(self._args(a, t, f))
+        h = kron._cli(self._args(a, t, f))
         w = '2016-03-04 21:55:01 UTC'
         self.assertEqual(h, w)
 
@@ -457,7 +464,7 @@ class Test(unittest.TestCase):
         a = ['1457128501']
         t = ['UTC']
         f = ['national']
-        h = kron.cli(self._args(a, t, f))
+        h = kron._cli(self._args(a, t, f))
         w = 'Fri Mar 04 21:55:01 UTC 2016'
         self.assertEqual(h, w)
 
@@ -522,7 +529,7 @@ class Test(unittest.TestCase):
         ))}
         t = ['UTC']
         f = sorted(w[a[0]]['UTC'].keys())
-        self.assertEqual(kron.cli(self._args(a, t, f)), kron._json(w))
+        self.assertEqual(kron._cli(self._args(a, t, f)), kron._json(w))
         t.append('PST8PDT')
         w[a[0]]['PST8PDT'] = dict(
             HH='13',
@@ -579,14 +586,14 @@ class Test(unittest.TestCase):
             yyyymm='201603',
             yyyymmdd='20160304',
         )
-        self.assertEqual(kron.cli(self._args(a, t, f)), kron._json(w))
+        self.assertEqual(kron._cli(self._args(a, t, f)), kron._json(w))
 
     def test_cli4(self):
         """multiple timezones, default format"""
         a = ['1457128501']
         t = ['UTC', 'EST5EDT']
         f = []
-        h = kron.cli(self._args(a, t, f))
+        h = kron._cli(self._args(a, t, f))
         w = kron._json({a[0]:dict(
             EST5EDT=dict(basetz='2016-03-04 16:55:01 EST'),
             UTC=dict(basetz='2016-03-04 21:55:01 UTC'),
@@ -602,7 +609,7 @@ class Test(unittest.TestCase):
             PST8PDT=dict(rfc2822='Fri, 04 Mar 2016 13:55:01 -0800'),
             UTC=dict(rfc2822='Fri, 04 Mar 2016 21:55:01 +0000'),
         )})
-        h = kron.cli(self._args(a, t, f))
+        h = kron._cli(self._args(a, t, f))
         self.assertEqual(h, w)
 
     def test_cli6(self):
@@ -611,7 +618,7 @@ class Test(unittest.TestCase):
         T = ['UTC']
         t = ['UTC']
         f = []
-        h = kron.cli(self._args(a, t, f, T))
+        h = kron._cli(self._args(a, t, f, T))
         w = '2016-03-04 21:55:01 UTC'
         self.assertEqual(h, w)
 
@@ -622,15 +629,15 @@ class Test(unittest.TestCase):
         F = ['iso8601']
         t = ['UTC']
         f = []
-        h = kron.cli(self._args(a, t, f, T, F))
+        h = kron._cli(self._args(a, t, f, T, F))
         w = '2014-01-23 09:06:12 UTC'
         self.assertEqual(h, w)
 
     def test_cli8(self):
         """version"""
         w = kron.version
-        self.assertEqual(kron.cli(['-V']), w)
-        self.assertEqual(kron.cli(['--version']), w)
+        self.assertEqual(kron._cli(['-V']), w)
+        self.assertEqual(kron._cli(['--version']), w)
 
     def test_time_utc(self):
         self.assertIsInstance(kron.time_utc(), float)
@@ -640,11 +647,13 @@ class Test(unittest.TestCase):
         self.assertRaises(kron.TimeEpochError, kron.time_utc, 'nonexistent')
 
     @unittest.skipIf(skip_network_tests, \
-    'skipping ntp tests that require network')
+    'skipping NTP tests that require network')
     def test_time_ntp_with_network(self):
         self.assertIsInstance(kron.time_ntp(), float)
-        self.assertIsInstance(kron.time_ntp('us.pool.ntp.org'), float)
+        for s in additional_ntp_servers:
+            self.assertIsInstance(kron.time_ntp(s), float)
         self.assertIsInstance(kron.time(ntp=True), float)
+        self.assertIsInstance(kron.timestamp(ntp=True), kron.timestamp)
 
     def test_time_ntp(self):
         self.assertRaises(kron.NTPError, kron.time_ntp, 'nonexistent')
