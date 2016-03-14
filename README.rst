@@ -210,7 +210,7 @@ Issues
 ======
 
 Please view/report any issues
-`here <https://github.com/qtfkwk/kron/issues>`_.
+`here <https://github.com/qtfkwk/kron/issues?utf8=✓&q=is%3Aissue>`_.
 
 Developers
 ==========
