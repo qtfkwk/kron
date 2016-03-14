@@ -144,6 +144,10 @@ class Test(unittest.TestCase):
         self.assertEqual(d2, d3)         # d2 == d3
         self.assertLessEqual(d2, d3)     # d2 <= d3
         self.assertGreaterEqual(d2, d3)  # d2 >= d3
+        self.assertGreater(d1, 56)
+        def cmp_str():
+            d1 > 'impossible'
+        self.assertRaises(kron.DurationComparisonError, cmp_str)
 
     def test_duration_math(self):
         d1 = kron.duration(1111111.111)
@@ -154,6 +158,8 @@ class Test(unittest.TestCase):
         d6 = kron.duration(1111106.111)
         d7 = kron.duration(5555555.555)
         d8 = kron.duration(2469135801975.3086)
+        t1 = kron.timestamp(1457128501)
+        t2 = d1 + t1
         i = 5
         f = 2222222.222
         self.assertEqual(d1 + d2, d4)  # d1 + d2 = d4
@@ -178,6 +184,12 @@ class Test(unittest.TestCase):
         def subtract_duration_string():
             return d1 - 'impossible'
         self.assertRaises(kron.DurationSubtractError, subtract_duration_string)
+        self.assertIsInstance(t2, kron.timestamp)
+        self.assertEqual(d1.value + t1.value, t2.value)
+        def subtract_duration_timestamp():
+            return d1 - t2
+        self.assertRaises(kron.DurationSubtractError, \
+            subtract_duration_timestamp)
 
     def test_timestamp_default(self):
         h = kron.timestamp()
@@ -308,6 +320,12 @@ class Test(unittest.TestCase):
         self.assertRaises(kron.TimestampDivideError, div_ts, t1, t2)
         self.assertRaises(kron.TimestampDivideError, div_ts, t1, i)
         self.assertRaises(kron.TimestampDivideError, div_ts, t1, f)
+        def sub_str():
+            t1 - 'impossible'
+        self.assertRaises(kron.TimestampSubtractError, sub_str)
+        def add_str():
+            t1 + 'impossible'
+        self.assertRaises(kron.TimestampAddError, add_str)
 
     def test_timestamp_formats(self):
         w = 1457139301.123456

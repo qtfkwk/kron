@@ -89,13 +89,19 @@ class duration(object):
         """Compare two duration objects"""
         if isinstance(y, duration):
             return cmp(self.value, y.value)
+        elif isinstance(y, (int, float)):
+            return cmp(self.value, y)
+        else:
+            raise DurationComparisonError
 
     def __add__(self, y):
         """Add two durations or a duration and an int or float"""
-        if isinstance(y, (duration, timestamp)):
+        if isinstance(y, duration):
             return duration(self.value + y.value)
         elif isinstance(y, (int, float)):
             return duration(self.value + y)
+        elif isinstance(y, timestamp):
+            return timestamp(self.value + y.value)
         else:
             raise DurationAddError
 
@@ -248,6 +254,8 @@ class timestamp(object):
             return timestamp(self.value - y.value)
         elif isinstance(y, (int, float)):
             return timestamp(self.value - y)
+        else:
+            raise TimestampSubtractError
 
     def __add__(self, y):
         """Add a duration, int, or float to a timestamp to produce a
@@ -256,6 +264,8 @@ class timestamp(object):
             return timestamp(self.value + y.value)
         elif isinstance(y, (int, float)):
             return timestamp(self.value + y)
+        else:
+            raise TimestampAddError
 
     def __mul__(self, y):
         """Cannot multiply a timestamp"""
@@ -378,55 +388,51 @@ class KronError(Exception):
     pass
 
 class DurationAddError(KronError):
-    """"""
+    pass
+
+class DurationComparisonError(KronError):
     pass
 
 class DurationDivideError(KronError):
-    """"""
     pass
 
 class DurationMultiplyError(KronError):
-    """"""
     pass
 
 class DurationSubtractError(KronError):
-    """"""
     pass
 
 class NTPError(KronError):
-    """"""
     pass
 
 class TimeEpochError(KronError):
-    """"""
     pass
 
 class TimeFormatError(KronError):
-    """"""
     pass
 
 class TimeTimezoneError(KronError):
-    """"""
+    pass
+
+class TimestampAddError(KronError):
     pass
 
 class TimestampComparisonError(KronError):
-    """"""
     pass
 
 class TimestampMultiplyError(KronError):
-    """"""
     pass
 
 class TimestampDivideError(KronError):
-    """"""
+    pass
+
+class TimestampSubtractError(KronError):
     pass
 
 class TimezoneFailure(KronError):
-    """"""
     pass
 
 class TimezoneMultiple(KronError):
-    """"""
     pass
 
 # Functions
