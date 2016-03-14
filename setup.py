@@ -1,6 +1,6 @@
 # Name: kron
 # Description: Uniform interface for dates and times
-# Version: 1.4.0
+# Version: 1.4.1
 # File: setup.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
@@ -31,7 +31,7 @@ if __name__ == '__main__':
         ],
         py_modules=['kron'],
         description='Uniform interface for dates and times',
-        entry_points=dict(console_scripts=['kron = kron:main']),
+        entry_points=dict(console_scripts=['kron = kron:_main']),
         classifiers=[
             'Development Status :: 5 - Production/Stable',
             'Environment :: Console',

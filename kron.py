@@ -2,7 +2,7 @@
 
 # Name: kron
 # Description: Uniform interface for dates and times
-# Version: 1.4.0
+# Version: 1.4.1
 # File: kron.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
@@ -30,7 +30,7 @@ import tzlocal
 
 # Variables
 
-version = '1.4.0'
+version = '1.4.1'
 
 # Classes
 
@@ -548,7 +548,7 @@ def _cli(argv=None):
 def _main():
     """Frontend function for command line interface"""
     import sys
-    print cli(sys.argv[1:])
+    print _cli(sys.argv[1:])
 
 def _json(obj):
     """Drop-in replacement for json.dumps() with pretty-printing"""
