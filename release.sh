@@ -30,12 +30,10 @@ echo :: git commit -m release\\ $new
 git commit -m release\ $new
 echo
 
-run "mkdir doc/source/_static"
-run "python setup.py build_sphinx"
-
-run "python setup.py sdist bdist_wheel"
-
 run "git push"
-run "python setup.py upload_sphinx"
-run "python setup.py upload"
+
+run "mkdir doc/source/_static"
+run "python setup.py build_sphinx upload_sphinx"
+run "python setup.py sdist bdist_wheel upload"
+
 
