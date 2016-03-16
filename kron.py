@@ -14,6 +14,11 @@
 * API Reference: https://pythonhosted.org/kron/#api-reference
 """
 
+from __future__ import division
+from __future__ import print_function
+from past.builtins import cmp
+from builtins import object
+
 # Standard modules
 
 import argparse
@@ -72,7 +77,7 @@ class duration(object):
     _values = dict(days=86400, hours=3600, minutes=60, seconds=1)
 
     def __init__(self, value=0):
-        self.value = round(value, 6)
+        self.value = float(round(value, 6))
 
     def dict(self):
         """Returns a dictionary with the duration as the count of
@@ -81,7 +86,7 @@ class duration(object):
         r = dict(days=0, hours=0, minutes=0, seconds=0)
         r['microseconds'] = int((self.value - v) * 10**6 + 0.5)
         for i in self._units:
-            r[i] = int(v / self._values[i])
+            r[i] = v // self._values[i]
             v -= r[i] * self._values[i]
         return r
 
@@ -91,6 +96,51 @@ class duration(object):
             return cmp(self.value, y.value)
         elif isinstance(y, (int, float)):
             return cmp(self.value, y)
+        else:
+            raise DurationComparisonError
+
+    def __lt__(self, y):
+        """Compare two duration objects via < (Python 3)"""
+        if isinstance(y, duration):
+            return self.value < y.value
+        elif isinstance(y, (int, float)):
+            return self.value < y
+        else:
+            raise DurationComparisonError
+
+    def __le__(self, y):
+        """Compare two duration objects via <= (Python 3)"""
+        if isinstance(y, duration):
+            return self.value <= y.value
+        elif isinstance(y, (int, float)):
+            return self.value <= y
+        else:
+            raise DurationComparisonError
+
+    def __gt__(self, y):
+        """Compare two duration objects via > (Python 3)"""
+        if isinstance(y, duration):
+            return self.value > y.value
+        elif isinstance(y, (int, float)):
+            return self.value > y
+        else:
+            raise DurationComparisonError
+
+    def __ge__(self, y):
+        """Compare two duration objects via >= (Python 3)"""
+        if isinstance(y, duration):
+            return self.value >= y.value
+        elif isinstance(y, (int, float)):
+            return self.value >= y
+        else:
+            raise DurationComparisonError
+
+    def __eq__(self, y):
+        """Compare two duration objects via == (Python 3)"""
+        if isinstance(y, duration):
+            return self.value == y.value
+        elif isinstance(y, (int, float)):
+            return self.value == y
         else:
             raise DurationComparisonError
 
@@ -125,6 +175,20 @@ class duration(object):
         """Divide a duration by an int or float"""
         if isinstance(y, (int, float)):
             return duration(self.value / y)
+        else:
+            raise DurationDivideError
+
+    def __truediv__(self, y):
+        """Divide a duration by an int or float"""
+        if isinstance(y, (int, float)):
+            return duration(self.value / y)
+        else:
+            raise DurationDivideError
+
+    def __floordiv__(self, y):
+        """Divide a duration by an int or float"""
+        if isinstance(y, (int, float)):
+            return duration(self.value // y)
         else:
             raise DurationDivideError
 
@@ -230,7 +294,7 @@ class timestamp(object):
     def __init__(self, value=None, tz=None, fmt=None, ntp=False):
         if isinstance(value, (int, float)):
             self.value = float(value)
-        elif isinstance(value, (str, unicode)) and \
+        elif isinstance(value, str) and \
         re.search(r'^\d+\.?\d*$', value):
             self.value = float(value)
         else:
@@ -241,6 +305,41 @@ class timestamp(object):
         """Compare two timestamps"""
         if isinstance(y, timestamp):
             return cmp(self.value, y.value)
+        else:
+            raise TimestampComparisonError
+
+    def __lt__(self, y):
+        """Compare two timestamps via < (Python 3)"""
+        if isinstance(y, timestamp):
+            return self.value < y.value
+        else:
+            raise TimestampComparisonError
+
+    def __le__(self, y):
+        """Compare two timestamps via <= (Python 3)"""
+        if isinstance(y, timestamp):
+            return self.value <= y.value
+        else:
+            raise TimestampComparisonError
+
+    def __gt__(self, y):
+        """Compare two timestamps via > (Python 3)"""
+        if isinstance(y, timestamp):
+            return self.value > y.value
+        else:
+            raise TimestampComparisonError
+
+    def __ge__(self, y):
+        """Compare two timestamps via >= (Python 3)"""
+        if isinstance(y, timestamp):
+            return self.value >= y.value
+        else:
+            raise TimestampComparisonError
+
+    def __eq__(self, y):
+        """Compare two timestamps via == (Python 3)"""
+        if isinstance(y, timestamp):
+            return self.value == y.value
         else:
             raise TimestampComparisonError
 
@@ -272,6 +371,14 @@ class timestamp(object):
         raise TimestampMultiplyError
 
     def __div__(self, y):
+        """Cannot divide a timestamp"""
+        raise TimestampDivideError
+
+    def __truediv__(self, y):
+        """Cannot divide a timestamp"""
+        raise TimestampDivideError
+
+    def __floordiv__(self, y):
         """Cannot divide a timestamp"""
         raise TimestampDivideError
 
@@ -488,7 +595,7 @@ def time_ntp(server='pool.ntp.org'):
     except:
         raise NTPError
     # convert from seconds since 1900 to seconds since 1970
-    r = res.tx_timestamp - 2208988800L
+    r = res.tx_timestamp - 2208988800
     # convert to utc
     r = time_utc(r)
     return r
@@ -554,7 +661,7 @@ def _cli(argv=None):
 def _main():
     """Frontend function for command line interface"""
     import sys
-    print _cli(sys.argv[1:])
+    print(_cli(sys.argv[1:]))
 
 def _json(obj):
     """Drop-in replacement for json.dumps() with pretty-printing"""

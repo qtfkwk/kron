@@ -15,6 +15,7 @@ additional_ntp_servers = ['us.pool.ntp.org']
 
 import datetime
 import json
+import sys
 import unittest
 
 # External modules
@@ -195,7 +196,10 @@ class Test(unittest.TestCase):
         h = kron.timestamp()
         self.assertIsInstance(h.value, float)
         r = r'^\d{4}-\d\d-\d\d \d\d:\d\d:\d\d UTC$'
-        self.assertRegexpMatches(h.str('UTC'), r)
+        if sys.version_info >= (3,):
+            self.assertRegex(h.str('UTC'), r)
+        else:
+            self.assertRegexpMatches(h.str('UTC'), r)
 
     def test_timestamp_int(self):
         w = 1457128501
@@ -207,7 +211,7 @@ class Test(unittest.TestCase):
             UTC='2016-03-04 21:55:01',
             CET='2016-03-04 22:55:01',
         )
-        for tz, v in w.items():
+        for tz, v in list(w.items()):
             self.assertEqual(h.str(tz), v + ' ' + tz)
             self.assertEqual(h.str(tz, 'basetz'), v + ' ' + tz)
             self.assertEqual(h.str(tz, 'base'), v)
@@ -222,7 +226,7 @@ class Test(unittest.TestCase):
             UTC='2016-03-04 21:55:01',
             CET='2016-03-04 22:55:01',
         )
-        for tz, v in w.items():
+        for tz, v in list(w.items()):
             self.assertEqual(h.str(tz), v + ' ' + tz)
             self.assertEqual(h.str(tz, 'basetz'), v + ' ' + tz)
             self.assertEqual(h.str(tz, 'base'), v)
@@ -388,7 +392,7 @@ class Test(unittest.TestCase):
             yyyymm='201603',
             yyyymmdd='20160304',
         )
-        for fmt, v in w.items():
+        for fmt, v in list(w.items()):
             self.assertEqual(h.str(tz, fmt), v)
 
     def test_timestamp_dict(self):
@@ -411,7 +415,7 @@ class Test(unittest.TestCase):
             base='2016-03-04 22:55:01',
             basetz='2016-03-04 22:55:01 CET',
         )
-        self.assertEqual(h.dict(w.keys(), ['base', 'basetz']), w)
+        self.assertEqual(h.dict(list(w.keys()), ['base', 'basetz']), w)
 
     def test_timestamp_json(self):
         h = kron.timestamp(1457128501)
@@ -435,7 +439,7 @@ class Test(unittest.TestCase):
             base='2016-03-04 22:55:01',
             basetz='2016-03-04 22:55:01 CET',
         )
-        self.assertEqual(h.json(w.keys(), ['base', 'basetz']), kron._json(w))
+        self.assertEqual(h.json(list(w.keys()), ['base', 'basetz']), kron._json(w))
 
     def test_timestamp_utc(self):
         h = kron.timestamp(1457128501)
