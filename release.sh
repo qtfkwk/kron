@@ -9,6 +9,7 @@ versions=( 2.7.11 3.5.1 )
 
 newre=$(echo $new |sed 's/\./\\./g')
 prevre=$(echo $prev |sed 's/\./\\./g')
+pyenv_orig=$(pyenv version |cut -d\  -f1)
 
 run() {
     echo :: $1
@@ -43,4 +44,6 @@ for v in "${versions[@]}"; do
     run "pyenv global $v"
     run "python setup.py bdist_wheel upload"
     done
+
+run "pyenv global $pyenv_orig"
 
