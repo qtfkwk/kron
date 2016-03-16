@@ -18,6 +18,7 @@ Features
 * Timestamp object "helper" methods for timezones and formats
 * Command line tool
 * Substitutes for ``time.time()``: time, time_ntp, time_utc
+* Supports Python versions >= 3.5.1 and >= 2.7.11
 
 Quick start
 ===========
@@ -268,7 +269,6 @@ Build documentation
 Ideas
 =====
 
-* Python 3
 * Command line tool
 
     * Timezone searching
@@ -299,8 +299,14 @@ See also
     * `tzlocal <https://pypi.python.org/pypi/tzlocal>`_
 
 * Network Time Protocol (RFC 1305) at
-  `Wikipedia <https://en.wikipedia.org/wiki/Network_Time_Protocol>`_,
+  `Wikipedia <https://en.wikipedia.org/wiki/RFC_1305>`_,
   `IETF <https://tools.ietf.org/html/rfc1305>`_
+* Internet Message Format (RFC 2822) at
+  `Wikipedia <https://en.wikipedia.org/wiki/RFC_2822>`_,
+  `IETF <https://tools.ietf.org/html/rfc2822>`_
+* Date and time format (ISO 8601) at
+  `Wikipedia <https://en.wikipedia.org/wiki/ISO_8601>`_,
+  `ISO <http://www.iso.org/iso/iso8601>`_
 * ``strftime`` at
   `linux.die.net <http://linux.die.net/man/3/strftime>`_,
   `Python time.strftime
