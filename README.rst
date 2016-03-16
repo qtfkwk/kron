@@ -306,7 +306,8 @@ See also
   `IETF <https://tools.ietf.org/html/rfc2822>`_
 * Date and time format (ISO 8601) at
   `Wikipedia <https://en.wikipedia.org/wiki/ISO_8601>`_,
-  `ISO <http://www.iso.org/iso/iso8601>`_
+  `ISO <http://www.iso.org/iso/iso8601>`_,
+  `xkcd <https://xkcd.com/1179/>`_
 * ``strftime`` at
   `linux.die.net <http://linux.die.net/man/3/strftime>`_,
   `Python time.strftime
