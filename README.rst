@@ -211,6 +211,9 @@ Versions
 |         |            | <https://github.com/qtfkwk/kron/issues/3>`_;  |
 |         |            | add release script; fix versions table        |
 +---------+------------+-----------------------------------------------+
+| 1.5.0   | 2016-03-16 | Support Python 3.5.1 and 2.7.11; default NTP  |
+|         |            | server: us.pool.ntp.org; fix release script   |
++---------+------------+-----------------------------------------------+
 
 Issues
 ======
