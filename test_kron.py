@@ -9,7 +9,7 @@
 # Variables
 
 skip_network_tests = False
-additional_ntp_servers = ['us.pool.ntp.org']
+additional_ntp_servers = []
 
 # Standard modules
 

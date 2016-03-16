@@ -581,7 +581,7 @@ def time(value=None, tz=None, fmt=None, ntp=False):
         r = time_utc(d, tz)
     return r
 
-def time_ntp(server='pool.ntp.org'):
+def time_ntp(server='us.pool.ntp.org'):
     """Similar to ``time_utc``, except uses NTP
 
     ``server`` can be any Internet or other network-based NTP server.
