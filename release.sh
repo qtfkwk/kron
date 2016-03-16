@@ -42,4 +42,5 @@ run "python setup.py sdist upload"
 for v in "${versions[@]}"; do
     run "pyenv global $v"
     run "python setup.py bdist_wheel upload"
+    done
 
