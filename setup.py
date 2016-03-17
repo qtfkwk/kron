@@ -41,6 +41,10 @@ if __name__ == '__main__':
             'Operating System :: OS Independent',
             'Topic :: Utilities',
             'Topic :: Software Development :: Libraries :: Python Modules',
+            'Programming Language :: Python :: 2',
+            'Programming Language :: Python :: 2.7',
+            'Programming Language :: Python :: 3',
+            'Programming Language :: Python :: 3.5',
         ],
     )
 

@@ -166,8 +166,8 @@ Kron is built around the "timestamp" class, which represents a
 specific point in time. Timestamp objects can be created, modified,
 and viewed in a few *natural* ways.
 
-The "duration" class represent a duration of time, which is also the
-difference of two timestamp objects.
+The "duration" class represents a duration of time and the difference
+of two timestamp objects.
 
 The "timezone" class is provided to simplify specifying a timezone by
 allowing a partial string or regular expression to search for the

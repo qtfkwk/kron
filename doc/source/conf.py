@@ -56,7 +56,7 @@ author = u'qtfkwk'
 # built documents.
 #
 # The short X.Y version.
-version = u'1.4'
+version = u'1.5'
 # The full version, including alpha/beta/rc tags.
 release = u'1.5.0'
 
@@ -268,7 +268,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'Kron', u'Kron Documentation',
-     author, 'Kron', 'One line description of project.',
+     author, 'Kron', 'Uniform interface for dates and times',
      'Miscellaneous'),
 ]
 
