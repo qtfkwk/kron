@@ -4,8 +4,8 @@ set -eo pipefail
 
 prev_=1.5
 new_=1.5
-prev=1.5.1
-new=1.5.2
+prev=1.5.2
+new=1.5.3
 
 versions=( 2.7.11 3.5.1 )
 
@@ -22,8 +22,8 @@ run() {
 }
 
 # ensure entry added to versions table
-echo :: grep \\\|\\ $newre README.rst
-grep \|\ $newre README.rst
+echo :: grep \\\|\\ $newre doc/source/index.rst
+grep \|\ $newre doc/source/index.rst
 echo
 
 # test in each pyenv version
