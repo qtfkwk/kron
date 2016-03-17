@@ -218,6 +218,8 @@ Versions
 | 1.5.1   | 2016-03-16 | Convert release script to python; improve     |
 |         |            | documentation; other minor fixes              |
 +---------+------------+-----------------------------------------------+
+| 1.5.2   | 2016-03-16 | Restore release script to bash; fix readme    |
++---------+------------+-----------------------------------------------+
 
 Issues
 ======
