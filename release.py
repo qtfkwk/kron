@@ -37,7 +37,7 @@ def replace(replacements, filenames):
         h.close()
 
 def run(command):
-    print(':: %s' % command)
+    print('\n:: %s' % command)
     c = shlex.split(command)
     pipe = subprocess.PIPE
     p = subprocess.Popen(c, stdout=pipe, stderr=pipe)
@@ -45,13 +45,12 @@ def run(command):
     ret = p.wait()
     if ret != 0:
         raise Exception('Command failed: "%s"!' % command)
-    return out.decode('utf8')
+    return out.decode('utf8').strip('\n')
 
 def run_(command):
-    print(':: %s' % command)
+    print('\n:: %s' % command)
     c = shlex.split(command)
-    p = subprocess.Popen(command, stdin=sys.stdin, stdout=sys.stdout, \
-        stderr=sys.stderr)
+    p = subprocess.Popen(c, stdout=sys.stdout, stderr=sys.stderr)
     ret = p.wait()
     if ret != 0:
         raise Exception('Command failed: "%s"!' % command)
@@ -69,11 +68,11 @@ def main():
         raise Exception('Add an entry to the versions table in README.rst!')
 
     # store original python version
-    pyenv_orig = run('pyenv version') #.split(' ')[0]
+    pyenv_orig = run('pyenv global')
 
     # test with each python version
     for v in pyenv_versions:
-        run('pyenv global %s' % v)
+        run_('pyenv global %s' % v)
         run_('py.test')
 
     # update versions in files
@@ -99,27 +98,28 @@ def main():
     )
 
     # github
-    run('git clean -dxf')
-    run('git add *')
-    run(r'git commit -m release\ %s' % new[1])
+    run_('git clean -dxn')
+    run_('git clean -dxf')
+    run_('git add *')
+    run_(r'git commit -m release\ %s' % new[1])
     run_('git push')
 
     # sphinx documentation
-    run('pyenv global %s' % python_version_sphinx)
-    run('mkdir doc/source/_static')
-    run('python setup.py build_sphinx upload_sphinx')
+    run_('pyenv global %s' % python_version_sphinx)
+    run_('mkdir doc/source/_static')
+    run_('python setup.py build_sphinx upload_sphinx')
 
     # source distribution to pypi
-    run('pyenv global %s' % sdist_version)
-    run('python setup.py sdist upload')
+    run_('pyenv global %s' % sdist_version)
+    run_('python setup.py sdist upload')
 
     # wheel distributions to pypi
     for v in pyenv_versions:
-        run('pyenv global %s' % v)
-        run('python setup.py bdist_wheel upload')
+        run_('pyenv global %s' % v)
+        run_('python setup.py bdist_wheel upload')
 
     # restore original python version
-    run('pyenv global %s' % pyenv_orig)
+    run_('pyenv global %s' % pyenv_orig)
 
 # Main
 
