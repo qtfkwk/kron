@@ -215,6 +215,9 @@ Versions
 | 1.5.0   | 2016-03-16 | Support Python 3.5.1 and 2.7.11; default NTP  |
 |         |            | server: us.pool.ntp.org; fix release script   |
 +---------+------------+-----------------------------------------------+
+| 1.5.1   | 2016-03-16 | Convert release script to python; improve     |
+|         |            | documentation; other minor fixes              |
++---------+------------+-----------------------------------------------+
 
 Issues
 ======
