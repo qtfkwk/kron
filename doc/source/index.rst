@@ -86,6 +86,7 @@ Command line tool
 
     $ kron -h
     usage: kron.py [-h] [-V] [-T TIMEZONE] [-F FORMAT] [-t TIMEZONE] [-f FORMAT]
+                   [-s TIMEZONE]
                    [ARG [ARG ...]]
     
     positional arguments:
@@ -98,7 +99,9 @@ Command line tool
       -T TIMEZONE    input timezone; default: local timezone
       -F FORMAT      input format; default: "base" ("%Y-%m-%d %H:%M:%S")
       -t TIMEZONE    output timezone; default: local timezone
-      -f FORMAT      output format; default: "basetz" ("%Y-%m-%d %H:%M:%S %Z")
+      -f FORMAT      output format; default: "basetz" ("%Y-%m-%d %H:%M:%S %Z");
+                     try "all" for a demonstration
+      -s TIMEZONE    search timezones
     $ kron
     2016-03-11 00:41:46 EST
     $ kron -t utc
@@ -125,6 +128,9 @@ Command line tool
             }
         }
     }
+    $ kron -s mad
+    Atlantic/Madeira
+    Europe/Madrid
 
 Discussion
 ==========
@@ -204,6 +210,9 @@ Versions
 +---------+------------+----------------------------------------------+
 | 1.5.3   | 2016-03-16 | Move readme content to package documentation |
 +---------+------------+----------------------------------------------+
+| 1.6.0   | 2016-03-23 | Add timezone search to CLI (-s); "all"       |
+|         |            | psuedo output format; improve documentation  |
++---------+------------+----------------------------------------------+
 
 Issues
 ======
@@ -260,8 +269,6 @@ Ideas
 
 * Command line tool
 
-    * Timezone searching
-    * List formats
     * Duration calculations
 
 * Parser to find timestamps inside text/data/filesystems
@@ -301,6 +308,12 @@ See also
   `linux.die.net <http://linux.die.net/man/3/strftime>`_,
   `Python time.strftime
   <https://docs.python.org/2/library/time.html#time.strftime>`_
+* tz database (zoneinfo, Olson database, tzfile) at
+  `IANA <http://www.iana.org/time-zones>`_,
+  `Wikipedia <https://en.wikipedia.org/wiki/Tz_database>`_,
+  `List of time zones
+  <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>`_,
+  `tzfile manpage <http://linux.die.net/man/5/tzfile>`_
 
 Author
 ======
