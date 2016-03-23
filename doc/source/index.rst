@@ -213,6 +213,8 @@ Versions
 | 1.6.0   | 2016-03-23 | Add timezone search to CLI (-s); "all"       |
 |         |            | psuedo output format; improve documentation  |
 +---------+------------+----------------------------------------------+
+| 1.6.1   | 2016-03-23 | Fix release script                           |
++---------+------------+----------------------------------------------+
 
 Issues
 ======
