@@ -2,10 +2,10 @@
 
 set -eo pipefail
 
-prev_=1.5
+prev_=1.6
 new_=1.6
-prev=1.5.3
-new=1.6.0
+prev=1.6.0
+new=1.6.1
 
 versions=( 2.7.11 3.5.1 )
 
@@ -34,8 +34,8 @@ for v in "${versions[@]}"; do
 
 # update versions in files
 run "sed -i _ s/$prevre/$new/ doc/source/conf.py kron.py setup.py test_kron.py"
-echo ":: sed -i _ 's/^version = u'\''$prev_re'\''/version = u'\''$new_'\''/' doc/source/conf.py"
-sed -i _ 's/^version = u'\''$prev_re'\''/version = u'\''$new_'\''/' doc/source/conf.py
+echo ":: sed -i _ 's/^version = .*/version = u'\'$new_\''/' doc/source/conf.py"
+sed -i _ 's/^version = .*/version = u'\'$new_\''/' doc/source/conf.py
 echo
 
 # github
