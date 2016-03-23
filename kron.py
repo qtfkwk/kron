@@ -415,6 +415,8 @@ class timestamp(object):
         """Returns the timestamp as a dictionary with keys as the
         given timezones and values as dictionaries with keys as the
         given formats (default: 'basetz')"""
+        if fmt == 'all' or isinstance(fmt, list) and 'all' in fmt:
+            fmt = list(self.formats.keys())
         if not isinstance(tz, list):
             tz = [tz]
         if not isinstance(fmt, list):
@@ -638,7 +640,8 @@ def _cli(argv=None):
     p.add_argument('-t', metavar='TIMEZONE', action='append', default=[], \
         help='output timezone; default: local timezone')
     p.add_argument('-f', metavar='FORMAT', action='append', default=[], \
-        help='output format; default: "basetz" ("%%Y-%%m-%%d %%H:%%M:%%S %%Z")')
+        help='output format; default: "basetz" ("%%Y-%%m-%%d ' + \
+             '%%H:%%M:%%S %%Z"); try "all" for a demonstration')
     p.add_argument('-s', metavar='TIMEZONE', action='store', \
         help='search timezones')
     p.add_argument('args', metavar='ARG', action='store', nargs='*', \
@@ -658,7 +661,7 @@ def _cli(argv=None):
             i = []
         if i == []:
             i.append(None)
-    if len(a.args) + len(a.t) + len(a.f) == 3:
+    if len(a.args) + len(a.t) + len(a.f) == 3 and not 'all' in a.f:
         return timestamp(a.args[0], a.T, a.F).str(a.t[0], a.f[0])
     r = {}
     for i in a.args:

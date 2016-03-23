@@ -416,6 +416,70 @@ class Test(unittest.TestCase):
         )
         self.assertEqual(h.dict(list(w.keys()), ['base', 'basetz']), w)
 
+    def test_timestamp_pseudo_format_all(self):
+        a = '1457128501'
+        h = kron.timestamp(a)
+        w = {a:dict(UTC=dict(
+            HH='21',
+            HHMM='2155',
+            HHMMSS='215501',
+            HH_MM='21:55',
+            HH_MM_SS='21:55:01',
+            MM='55',
+            SS='01',
+            abbr_date='Fri, Mar 04, 2016',
+            abbr_month='Mar',
+            abbr_weekday='Fri',
+            ampm='PM',
+            base='2016-03-04 21:55:01',
+            basetz='2016-03-04 21:55:01 UTC',
+            ccyy='2016',
+            ccyymm='201603',
+            ccyymmdd='20160304',
+            date='Friday, March 04, 2016',
+            dd='04',
+            hh='09',
+            hh_MM='09:55',
+            hh_MM_SS='09:55:01',
+            hh_MM_SS_ampm='09:55:01 PM',
+            hh_MM_ampm='09:55 PM',
+            hours='21',
+            hours12='09',
+            hours24='21',
+            iso8601='2016-03-04T21:55:01Z',
+            julian='064',
+            microseconds='000000',
+            minutes='55',
+            mm='03',
+            mm_dd_yy='03/04/16',
+            mmdd='0304',
+            mon='Mar',
+            month='March',
+            national='Fri Mar 04 21:55:01 UTC 2016',
+            national_date='03/04/16',
+            national_time='21:55:01',
+            rfc2822='Fri, 04 Mar 2016 21:55:01 +0000',
+            rfc2822_='Fri, 04 Mar 2016 21:55:01',
+            seconds='01',
+            tz='UTC',
+            tz_offset='+0000',
+            week_number_mon='09',
+            week_number_sun='09',
+            weekday='Friday',
+            year='2016',
+            yy='16',
+            yymm='1603',
+            yymmdd='160304',
+            yyyy='2016',
+            yyyy_mm_dd='2016/03/04',
+            yyyymm='201603',
+            yyyymmdd='20160304',
+        ))}
+        self.maxDiff = None
+        self.assertEqual(h.dict('UTC', 'all'), w[a])
+        self.assertEqual(kron._cli(['-t', 'UTC', '-f', 'all', a]), \
+            kron._json(w))
+
     def test_timestamp_json(self):
         h = kron.timestamp(1457128501)
         w = {}
