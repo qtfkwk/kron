@@ -30,7 +30,6 @@ import kron
 # Classes
 
 class Test(unittest.TestCase):
-    """test suite"""
 
     def test_timezone_search_default(self):
         h = kron.timezone.search()
@@ -660,6 +659,21 @@ class Test(unittest.TestCase):
         w = kron.version
         self.assertEqual(kron._cli(['-V']), w)
         self.assertEqual(kron._cli(['--version']), w)
+
+    def test_cli_search_timezone(self):
+        h = kron._cli(['-s', ''])
+        w = '\n'.join(pytz.all_timezones)
+        self.assertEqual(h, w)
+
+    def test_cli_search_timezone_partial_lower(self):
+        h = kron._cli(['-s', 'madrid'])
+        w = 'Europe/Madrid'
+        self.assertEqual(h, w)
+
+    def test_cli_search_timezone_multiple(self):
+        h = kron._cli(['-s', 'mad'])
+        w = '\n'.join(['Atlantic/Madeira', 'Europe/Madrid'])
+        self.assertEqual(h, w)
 
     def test_time_utc(self):
         self.assertIsInstance(kron.time_utc(), float)

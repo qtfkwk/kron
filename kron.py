@@ -639,6 +639,8 @@ def _cli(argv=None):
         help='output timezone; default: local timezone')
     p.add_argument('-f', metavar='FORMAT', action='append', default=[], \
         help='output format; default: "basetz" ("%%Y-%%m-%%d %%H:%%M:%%S %%Z")')
+    p.add_argument('-s', metavar='TIMEZONE', action='store', \
+        help='search timezones')
     p.add_argument('args', metavar='ARG', action='store', nargs='*', \
         help='one or more timestamps; int/float epoch seconds,' + \
         ' string in the base format or the format specified by -F;' + \
@@ -646,6 +648,11 @@ def _cli(argv=None):
     a = p.parse_args(argv)
     if a.version:
         return version
+    if a.s != None:
+        r = timezone.search(a.s)
+        if not isinstance(r, list):
+            r = [r]
+        return '\n'.join(r)
     for i in (a.args, a.t, a.f):
         if i == None:
             i = []
