@@ -24,6 +24,7 @@ if __name__ == '__main__':
             'ntplib',
             'pytz',
             'tzlocal',
+            'future',
         ],
         py_modules=['kron'],
         description='Uniform interface for dates and times',
