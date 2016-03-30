@@ -10,10 +10,6 @@
 
 import setuptools
 
-# Internal modules
-
-import kron
-
 # Main
 
 if __name__ == '__main__':
@@ -23,7 +19,7 @@ if __name__ == '__main__':
         url='https://github.com/qtfkwk/kron',
         author='qtfkwk',
         author_email='qtfkwk+kron@gmail.com',
-        version=kron.version,
+        version='1.6.1',
         install_requires=[
             'ntplib',
             'pytz',

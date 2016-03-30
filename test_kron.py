@@ -720,7 +720,7 @@ class Test(unittest.TestCase):
 
     def test_cli8(self):
         """version"""
-        w = kron.version
+        w = kron.__version__
         self.assertEqual(kron._cli(['-V']), w)
         self.assertEqual(kron._cli(['--version']), w)
 

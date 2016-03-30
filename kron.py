@@ -35,7 +35,7 @@ import tzlocal
 
 # Variables
 
-version = '1.6.1'
+__version__ = '1.6.1'
 
 # Classes
 
@@ -650,7 +650,7 @@ def _cli(argv=None):
         ' default: now')
     a = p.parse_args(argv)
     if a.version:
-        return version
+        return __version__
     if a.s != None:
         r = timezone.search(a.s)
         if not isinstance(r, list):
