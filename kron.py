@@ -70,7 +70,7 @@ class duration(object):
 
     Arithmetic operations with a type not listed in the above table
     raises one of ``DurationAddError``, ``DurationDivideError``,
-    ``DurationMultipyError``, or ``DurationSubstractError``.
+    ``DurationMultipyError``, or ``DurationSubtractError``.
     """
 
     _units = ('days', 'hours', 'minutes', 'seconds')
@@ -231,7 +231,7 @@ class timestamp(object):
 
     Arithmetic operations with a type not listed in the above table
     raises one of ``TimestampAddError``, ``TimestampDivideError``,
-    ``TimestampMultipyError``, or ``TimestampSubstractError``.
+    ``TimestampMultipyError``, or ``TimestampSubtractError``.
     """
 
     formats = _bdict(
