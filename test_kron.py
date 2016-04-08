@@ -1,6 +1,6 @@
 # Name: kron
 # Description: Uniform interface for dates and times
-# Version: 1.6.1
+# Version: 1.6.2
 # File: test_kron.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk

@@ -215,6 +215,11 @@ Versions
 +---------+------------+----------------------------------------------+
 | 1.6.1   | 2016-03-23 | Fix release script                           |
 +---------+------------+----------------------------------------------+
+| 1.6.2   | 2016-04-08 | Avoid importing kron in setup.py; change     |
+|         |            | version to __version__; add dependency       |
+|         |            | future to setup.py; fix spelling in          |
+|         |            | documentation                                |
++---------+------------+----------------------------------------------+
 
 Issues
 ======
