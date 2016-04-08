@@ -477,7 +477,7 @@ class Test(unittest.TestCase):
         ))}
         self.maxDiff = None
         self.assertEqual(h.dict('UTC', 'all'), w[a])
-        self.assertEqual(kron._cli(['-t', 'UTC', '-f', 'all', a]), \
+        self.assertEqual(kron.cli(['-t', 'UTC', '-f', 'all', a]), \
             kron._json(w))
 
     def test_timestamp_json(self):
@@ -540,7 +540,7 @@ class Test(unittest.TestCase):
         a = ['1457128501']
         t = ['UTC']
         f = []
-        h = kron._cli(self._args(a, t, f))
+        h = kron.cli(self._args(a, t, f))
         w = '2016-03-04 21:55:01 UTC'
         self.assertEqual(h, w)
 
@@ -549,7 +549,7 @@ class Test(unittest.TestCase):
         a = ['1457128501']
         t = ['UTC']
         f = ['national']
-        h = kron._cli(self._args(a, t, f))
+        h = kron.cli(self._args(a, t, f))
         w = 'Fri Mar 04 21:55:01 UTC 2016'
         self.assertEqual(h, w)
 
@@ -614,7 +614,7 @@ class Test(unittest.TestCase):
         ))}
         t = ['UTC']
         f = sorted(w[a[0]]['UTC'].keys())
-        self.assertEqual(kron._cli(self._args(a, t, f)), kron._json(w))
+        self.assertEqual(kron.cli(self._args(a, t, f)), kron._json(w))
         t.append('PST8PDT')
         w[a[0]]['PST8PDT'] = dict(
             HH='13',
@@ -671,14 +671,14 @@ class Test(unittest.TestCase):
             yyyymm='201603',
             yyyymmdd='20160304',
         )
-        self.assertEqual(kron._cli(self._args(a, t, f)), kron._json(w))
+        self.assertEqual(kron.cli(self._args(a, t, f)), kron._json(w))
 
     def test_cli4(self):
         """multiple timezones, default format"""
         a = ['1457128501']
         t = ['UTC', 'EST5EDT']
         f = []
-        h = kron._cli(self._args(a, t, f))
+        h = kron.cli(self._args(a, t, f))
         w = kron._json({a[0]:dict(
             EST5EDT=dict(basetz='2016-03-04 16:55:01 EST'),
             UTC=dict(basetz='2016-03-04 21:55:01 UTC'),
@@ -694,7 +694,7 @@ class Test(unittest.TestCase):
             PST8PDT=dict(rfc2822='Fri, 04 Mar 2016 13:55:01 -0800'),
             UTC=dict(rfc2822='Fri, 04 Mar 2016 21:55:01 +0000'),
         )})
-        h = kron._cli(self._args(a, t, f))
+        h = kron.cli(self._args(a, t, f))
         self.assertEqual(h, w)
 
     def test_cli6(self):
@@ -703,7 +703,7 @@ class Test(unittest.TestCase):
         T = ['UTC']
         t = ['UTC']
         f = []
-        h = kron._cli(self._args(a, t, f, T))
+        h = kron.cli(self._args(a, t, f, T))
         w = '2016-03-04 21:55:01 UTC'
         self.assertEqual(h, w)
 
@@ -714,28 +714,28 @@ class Test(unittest.TestCase):
         F = ['iso8601']
         t = ['UTC']
         f = []
-        h = kron._cli(self._args(a, t, f, T, F))
+        h = kron.cli(self._args(a, t, f, T, F))
         w = '2014-01-23 09:06:12 UTC'
         self.assertEqual(h, w)
 
     def test_cli8(self):
         """version"""
         w = kron.__version__
-        self.assertEqual(kron._cli(['-V']), w)
-        self.assertEqual(kron._cli(['--version']), w)
+        self.assertEqual(kron.cli(['-V']), w)
+        self.assertEqual(kron.cli(['--version']), w)
 
     def test_cli_search_timezone(self):
-        h = kron._cli(['-s', ''])
+        h = kron.cli(['-s', ''])
         w = '\n'.join(pytz.all_timezones)
         self.assertEqual(h, w)
 
     def test_cli_search_timezone_partial_lower(self):
-        h = kron._cli(['-s', 'madrid'])
+        h = kron.cli(['-s', 'madrid'])
         w = 'Europe/Madrid'
         self.assertEqual(h, w)
 
     def test_cli_search_timezone_multiple(self):
-        h = kron._cli(['-s', 'mad'])
+        h = kron.cli(['-s', 'mad'])
         w = '\n'.join(['Atlantic/Madeira', 'Europe/Madrid'])
         self.assertEqual(h, w)
 

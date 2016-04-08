@@ -628,7 +628,7 @@ def time_utc(epoch=None, tz=None):
     r += d.microsecond / float(10**6)
     return r
 
-def _cli(argv=None):
+def cli(argv=None):
     """Backend function for command line interface"""
     p = argparse.ArgumentParser()
     p.add_argument('-V', '--version', action='store_true', \
@@ -668,10 +668,10 @@ def _cli(argv=None):
         r[i if i != None else 'now'] = timestamp(i, a.T, a.F).dict(a.t, a.f)
     return _json(r)
 
-def _main():
+def main():
     """Frontend function for command line interface"""
     import sys
-    print(_cli(sys.argv[1:]))
+    print(cli(sys.argv[1:]))
 
 def _json(obj):
     """Drop-in replacement for json.dumps() with pretty-printing"""
@@ -680,5 +680,5 @@ def _json(obj):
 # Main
 
 if __name__ == '__main__':
-    _main()
+    main()
 

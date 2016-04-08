@@ -525,6 +525,16 @@ timezone
 Functions
 ---------
 
+cli
+'''
+
+.. autofunction:: kron.cli
+
+main
+''''
+
+.. autofunction:: kron.main
+
 time
 ''''
 
