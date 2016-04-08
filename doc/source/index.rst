@@ -220,6 +220,8 @@ Versions
 |         |            | future to setup.py; fix spelling in          |
 |         |            | documentation                                |
 +---------+------------+----------------------------------------------+
+| 1.6.3   | 2016-04-09 | Upload new version due to PyPI upload error  |
++---------+------------+----------------------------------------------+
 
 Issues
 ======
