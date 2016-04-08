@@ -14,7 +14,7 @@ Features
 * Default timezone is local timezone
 * Comparison and arithmetic methods for timestamps and durations
 * Test-driven development methodology
-* Named formats
+* `Named formats <http://pythonhosted.org/kron/#named-formats>`_
 * Timestamp object "helper" methods for timezones and formats
 * Command line tool
 * Substitutes for ``time.time()``: time, time_ntp, time_utc
