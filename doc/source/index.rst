@@ -222,6 +222,9 @@ Versions
 +---------+------------+----------------------------------------------+
 | 1.6.3   | 2016-04-08 | Upload new version due to PyPI upload error  |
 +---------+------------+----------------------------------------------+
+| 1.6.4   | 2016-05-26 | Added videos to see also section in          |
+|         |            | documentation                                |
++---------+------------+----------------------------------------------+
 
 Issues
 ======
@@ -323,6 +326,12 @@ See also
   `List of time zones
   <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones>`_,
   `tzfile manpage <http://linux.die.net/man/5/tzfile>`_
+* Videos
+
+    * `The Leap Year as Explained by Neil deGrasse Tyson
+      <https://youtu.be/yd1i3vkkh-0>`_
+    * `The Problem with Time & Timezones - Computerphile
+      <https://youtu.be/-5wpm-gesOY>`_
 
 Author
 ======
