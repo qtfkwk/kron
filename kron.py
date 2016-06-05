@@ -2,7 +2,7 @@
 
 # Name: kron
 # Description: Uniform interface for dates and times
-# Version: 1.6.5
+# Version: 1.6.6
 # File: kron.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
@@ -35,7 +35,7 @@ import tzlocal
 
 # Variables
 
-__version__ = '1.6.5'
+__version__ = '1.6.6'
 
 # Classes
 
@@ -465,7 +465,8 @@ class timezone(object):
 
         ``name`` can be:
 
-        * omitted or None: returns name of the local timezone
+        * omitted or None: returns name of the local timezone via
+          tzlocal or UTC
         * string matching a timezone name in ``pytz.all_timezones``:
           returns the timezone name in proper case
         * empty string ('') or wildcard regular expression ('.*'):
@@ -474,7 +475,10 @@ class timezone(object):
           zero matches returns a list with the matched timezone names
         """
         if name == None:
-            return tzlocal.get_localzone().zone
+            try:
+                return tzlocal.get_localzone().zone
+            except:
+                return 'UTC'
         if name in pytz.all_timezones:
             return name
         name_ = name.lower()

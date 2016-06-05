@@ -1,6 +1,6 @@
 # Name: kron
 # Description: Uniform interface for dates and times
-# Version: 1.6.5
+# Version: 1.6.6
 # File: test_kron.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
@@ -33,7 +33,11 @@ class Test(unittest.TestCase):
 
     def test_timezone_search_default(self):
         h = kron.timezone.search()
-        w = tzlocal.get_localzone().zone
+        w = h
+        try:
+            w = tzlocal.get_localzone().zone
+        except:
+            pass
         self.assertEqual(h, w)
 
     def test_timezone_search_complete_name(self):
@@ -73,7 +77,11 @@ class Test(unittest.TestCase):
 
     def test_timezone_default(self):
         h = kron.timezone()
-        w = tzlocal.get_localzone().zone
+        w = h.name
+        try:
+            w = tzlocal.get_localzone().zone
+        except:
+            pass
         self.assertEqual(h.original, None)
         self.assertEqual(h.name, w)
         self.assertIsInstance(h.pytz, datetime.tzinfo)

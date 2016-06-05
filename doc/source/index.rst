@@ -228,6 +228,9 @@ Versions
 | 1.6.5   | 2016-06-05 | Fix broken shim as result of exposing        |
 |         |            | command line interface functions in 1.6.4    |
 +---------+------------+----------------------------------------------+
+| 1.6.6   | 2016-06-05 | Make the default timezone UTC if tzlocal     |
+|         |            | fails to get the local timezone              |
++---------+------------+----------------------------------------------+
 
 Issues
 ======
