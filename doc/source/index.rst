@@ -225,6 +225,9 @@ Versions
 | 1.6.4   | 2016-05-26 | Added videos to see also section in          |
 |         |            | documentation                                |
 +---------+------------+----------------------------------------------+
+| 1.6.5   | 2016-06-05 | Fix broken shim as result of exposing        |
+|         |            | command line interface functions in 1.6.4    |
++---------+------------+----------------------------------------------+
 
 Issues
 ======
