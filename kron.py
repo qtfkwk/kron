@@ -2,7 +2,7 @@
 
 # Name: kron
 # Description: Uniform interface for dates and times
-# Version: 1.6.6
+# Version: 1.6.7
 # File: kron.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
@@ -35,7 +35,7 @@ import tzlocal
 
 # Variables
 
-__version__ = '1.6.6'
+__version__ = '1.6.7'
 
 # Classes
 
@@ -251,8 +251,11 @@ class timestamp(object):
         ccyy='%Y',
         ccyymm='%Y%m',
         ccyymmdd='%Y%m%d',
+        d='%a',
         date='%A, %B %d, %Y',
+        day='%A',
         dd='%d',
+        dd_Mon_yyyy='%d %b %Y',
         hh='%I',
         hh_MM='%I:%M',
         hh_MM_ampm='%I:%M %p',
@@ -394,7 +397,17 @@ class timestamp(object):
             d = tz.normalize(d.astimezone(tz))
         if fmt == None:
             fmt = 'basetz'
-        return d.strftime(self.formats[fmt])
+        if fmt == 'Month_Nth':
+            r = d.strftime('%%B %s' % _nth(d.strftime('%d')))
+        elif fmt == 'Month_Nth_YYYY':
+            r = d.strftime('%%B %s, %%Y' % _nth(d.strftime('%d')))
+        elif fmt == 'Day_Month_Nth':
+            r = d.strftime('%%A, %%B %s' % _nth(d.strftime('%d')))
+        elif fmt == 'Day_Month_Nth_YYYY':
+            r = d.strftime('%%A, %%B %s, %%Y' % _nth(d.strftime('%d')))
+        else:
+            r = d.strftime(self.formats[fmt])
+        return r
 
     def utc(self, fmt='basetz'):
         """Returns the timestamp as a string in the UTC timezone and
@@ -680,6 +693,15 @@ def main():
 def _json(obj):
     """Drop-in replacement for json.dumps() with pretty-printing"""
     return json.dumps(obj, sort_keys=True, indent=4, separators=(',', ': '))
+
+def _nth(n):
+    """Convert an integer to a string with ordinal letters
+    For example, `_nth(1)` returns "1st", `_nth(2)` returns "2nd", etc.
+    """
+    t = 'th'
+    a = {'11': t, '12': t, '13': t, '1': 'st', '2': 'nd', '3': 'rd'}
+    n = str(int(n))
+    return n + a.get(n[-2:], a.get(n[-1], t))
 
 # Main
 

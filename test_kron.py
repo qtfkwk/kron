@@ -1,6 +1,6 @@
 # Name: kron
 # Description: Uniform interface for dates and times
-# Version: 1.6.6
+# Version: 1.6.7
 # File: test_kron.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
@@ -340,17 +340,22 @@ class Test(unittest.TestCase):
 
     def test_timestamp_formats(self):
         w = 1457139301.123456
-        h = kron.timestamp(w)
+        _h = kron.timestamp(w)
         tz = 'CST'
-        self.assertEqual(h.value, w)
-        self.assertIsInstance(h.value, float)
-        w = dict(
+        h = _h.value
+        self.assertEqual(h, w)
+        self.assertIsInstance(h, float)
+        f = dict(
+            Day_Month_Nth='Friday, March 4th',
+            Day_Month_Nth_YYYY='Friday, March 4th, 2016',
             HH='18',
             HHMM='1855',
             HHMMSS='185501',
             HH_MM='18:55',
             HH_MM_SS='18:55:01',
             MM='55',
+            Month_Nth='March 4th',
+            Month_Nth_YYYY='March 4th, 2016',
             SS='01',
             abbr_date='Fri, Mar 04, 2016',
             abbr_month='Mar',
@@ -361,8 +366,11 @@ class Test(unittest.TestCase):
             ccyy='2016',
             ccyymm='201603',
             ccyymmdd='20160304',
+            d='Fri',
             date='Friday, March 04, 2016',
+            day='Friday',
             dd='04',
+            dd_Mon_yyyy='04 Mar 2016',
             hh='06',
             hh_MM='06:55',
             hh_MM_SS='06:55:01',
@@ -399,8 +407,9 @@ class Test(unittest.TestCase):
             yyyymm='201603',
             yyyymmdd='20160304',
         )
-        for fmt, v in list(w.items()):
-            self.assertEqual(h.str(tz, fmt), v)
+        for fmt, w in list(f.items()):
+            h = _h.str(tz, fmt)
+            self.assertEqual(h, w)
 
     def test_timestamp_dict(self):
         h = kron.timestamp(1457128501)
@@ -444,8 +453,11 @@ class Test(unittest.TestCase):
             ccyy='2016',
             ccyymm='201603',
             ccyymmdd='20160304',
+            d='Fri',
             date='Friday, March 04, 2016',
+            day='Friday',
             dd='04',
+            dd_Mon_yyyy='04 Mar 2016',
             hh='09',
             hh_MM='09:55',
             hh_MM_SS='09:55:01',

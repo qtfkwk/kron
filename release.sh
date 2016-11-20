@@ -4,10 +4,10 @@ set -eo pipefail
 
 prev_=1.6
 new_=1.6
-prev=1.6.5
-new=1.6.6
+prev=1.6.6
+new=1.6.7
 
-versions=( 2.7.11 3.5.1 )
+versions=( 2.7.12 3.5.2 )
 
 newre=$(echo $new |sed 's/\./\\./g')
 prevre=$(echo $prev |sed 's/\./\\./g')
@@ -47,12 +47,12 @@ echo
 run "git push"
 
 # sphinx documentation to pythonhosted
-run "pyenv global 2.7.11"
+run "pyenv global 2.7.12"
 run "mkdir doc/source/_static"
 run "python setup.py build_sphinx upload_sphinx"
 
 # source distribution to pypi
-run "pyenv global 2.7.11"
+run "pyenv global 2.7.12"
 run "python setup.py sdist upload"
 
 # wheel distributions to pypi
