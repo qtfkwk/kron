@@ -144,7 +144,7 @@ for doing so.
 Background
 ==========
 
-Kron begun as a portfolio project to demonstrate proficiency in
+Kron began as a portfolio project to demonstrate proficiency in
 Python as well as practice the test-driven development (TDD) process
 in concert with git and Github. The topic was selected to address some
 personal points of pain experienced while working with dates and times
@@ -212,6 +212,7 @@ Versions
 * 1.6.10 (2016-11-22): Scrub documentation: convert versions table
   back to list; remove setup.cfg
 * 1.6.11 (2016-11-22): Fix links in README
+* 1.6.12 (2016-11-22): Scrub documentation
 
 Issues
 ======
@@ -261,7 +262,7 @@ Build documentation
 ::
 
     $ cd kron
-    $ make -C doc html
+    $ make -C docs html
 
 Ideas
 =====
@@ -375,7 +376,9 @@ Kron provides a means to specify ``strftime``/``strptime`` formats as
 the ``timestamp.formats`` dictionary. If the value passed for a
 ``fmt`` argument matches a named format name, then the appropriate
 format string is substituted when it is used. Otherwise, the specified
-format is used as is.
+format is used as is. Named formats that have a format string of
+``Custom`` can only be used as an output format, not to create a
+timestamp via ``strptime``.
 
 For more information about ``strftime`` formats, please consult ``man
 strftime`` or visit ``strftime`` at

@@ -4,8 +4,8 @@ set -eo pipefail
 
 prev_=1.6
 new_=1.6
-prev=1.6.10
-new=1.6.11
+prev=1.6.11
+new=1.6.12
 
 sdist_version=2.7.12
 versions=( 2.7.12 3.5.2 )
