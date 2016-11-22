@@ -170,76 +170,47 @@ proper name.
 Versions
 ========
 
-+---------+------------+----------------------------------------------+
-| Version | Date       | Description                                  |
-+=========+============+==============================================+
-| 1.0.0   | 2016-03-05 | Initial release                              |
-+---------+------------+----------------------------------------------+
-| 1.0.1   | 2016-03-05 | Finished rename                              |
-+---------+------------+----------------------------------------------+
-| 1.1.0   | 2016-03-06 | More formats, improved documentation         |
-+---------+------------+----------------------------------------------+
-| 1.1.1   | 2016-03-06 | Added description to setup.py                |
-+---------+------------+----------------------------------------------+
-| 1.2.0   | 2016-03-08 | Helper methods for timezone and formats;     |
-|         |            | command line tool                            |
-+---------+------------+----------------------------------------------+
-| 1.3.0   | 2016-03-11 | Converted timestamp internal storage to UTC; |
-|         |            | added Network Time Protocol (RFC 1305)       |
-|         |            | functionality via ntplib module; added time, |
-|         |            | time_ntp, time_utc functions; improved       |
-|         |            | documentation                                |
-+---------+------------+----------------------------------------------+
-| 1.3.1   | 2016-03-11 | Added version test                           |
-+---------+------------+----------------------------------------------+
-| 1.3.2   | 2016-03-11 | Fixed classifers                             |
-+---------+------------+----------------------------------------------+
-| 1.4.0   | 2016-03-13 | Improved documentation                       |
-+---------+------------+----------------------------------------------+
-| 1.4.1   | 2016-03-13 | Fix command line tool                        |
-+---------+------------+----------------------------------------------+
-| 1.4.2   | 2016-03-14 | Add release script; fix versions table       |
-+---------+------------+----------------------------------------------+
-| 1.5.0   | 2016-03-16 | Support Python 3.5.1 and 2.7.11; default NTP |
-|         |            | server: us.pool.ntp.org; fix release script  |
-+---------+------------+----------------------------------------------+
-| 1.5.1   | 2016-03-16 | Convert release script to python; improve    |
-|         |            | documentation; other minor fixes             |
-+---------+------------+----------------------------------------------+
-| 1.5.2   | 2016-03-16 | Restore release script to bash; fix readme   |
-+---------+------------+----------------------------------------------+
-| 1.5.3   | 2016-03-16 | Move readme content to package documentation |
-+---------+------------+----------------------------------------------+
-| 1.6.0   | 2016-03-23 | Add timezone search to CLI (-s); "all"       |
-|         |            | psuedo output format; improve documentation  |
-+---------+------------+----------------------------------------------+
-| 1.6.1   | 2016-03-23 | Fix release script                           |
-+---------+------------+----------------------------------------------+
-| 1.6.2   | 2016-04-08 | Avoid importing kron in setup.py; change     |
-|         |            | version to __version__; add dependency       |
-|         |            | future to setup.py; fix spelling in          |
-|         |            | documentation                                |
-+---------+------------+----------------------------------------------+
-| 1.6.3   | 2016-04-08 | Upload new version due to PyPI upload error  |
-+---------+------------+----------------------------------------------+
-| 1.6.4   | 2016-05-26 | Added videos to see also section in          |
-|         |            | documentation                                |
-+---------+------------+----------------------------------------------+
-| 1.6.5   | 2016-06-05 | Fix broken shim as result of exposing        |
-|         |            | command line interface functions in 1.6.4    |
-+---------+------------+----------------------------------------------+
-| 1.6.6   | 2016-06-05 | Make the default timezone UTC if tzlocal     |
-|         |            | fails to get the local timezone              |
-+---------+------------+----------------------------------------------+
-| 1.6.7   | 2016-11-20 | Add named formats "d", "day", and            |
-|         |            | "dd_Mon_yyyy"; add named output formats      |
-|         |            | "Month_Nth", "Month_Nth_YYYY",               |
-|         |            | "Day_Month_Nth", and "Day_Month_Nth_YYYY"    |
-+---------+------------+----------------------------------------------+
-| 1.6.8   | 2016-11-21 | Move documentation to readthedocs            |
-+---------+------------+----------------------------------------------+
-| 1.6.9   | 2016-11-21 | Fix documentation issues                     |
-+---------+------------+----------------------------------------------+
+* 1.0.0 (2016-03-05): Initial release
+* 1.0.1 (2016-03-05): Finished rename
+* 1.1.0 (2016-03-06): More formats, improved documentation
+* 1.1.1 (2016-03-06): Added description to setup.py
+* 1.2.0 (2016-03-08): Helper methods for timezone and formats; command
+  line tool
+* 1.3.0 (2016-03-11): Converted timestamp internal storage to UTC;
+  added Network Time Protocol (RFC 1305) functionality via ntplib
+  module; added time, time_ntp, time_utc functions; improved
+  documentation
+* 1.3.1 (2016-03-11): Added version test
+* 1.3.2 (2016-03-11): Fixed classifers
+* 1.4.0 (2016-03-13): Improved documentation
+* 1.4.1 (2016-03-13): Fix command line tool
+* 1.4.2 (2016-03-14): Add release script; fix versions table
+* 1.5.0 (2016-03-16): Support Python 3.5.1 and 2.7.11; default NTP
+  server: us.pool.ntp.org; fix release script
+* 1.5.1 (2016-03-16): Convert release script to python; improve
+  documentation; other minor fixes
+* 1.5.2 (2016-03-16): Restore release script to bash; fix readme
+* 1.5.3 (2016-03-16): Move readme content to package documentation
+* 1.6.0 (2016-03-23): Add timezone search to CLI (-s); "all" psuedo
+  output format; improve documentation
+* 1.6.1 (2016-03-23): Fix release script
+* 1.6.2 (2016-04-08): Avoid importing kron in setup.py; change version
+  to __version__; add dependency future to setup.py; fix spelling in
+  documentation
+* 1.6.3 (2016-04-08): Upload new version due to PyPI upload error
+* 1.6.4 (2016-05-26): Added videos to see also section in
+  documentation
+* 1.6.5 (2016-06-05): Fix broken shim as result of exposing command
+  line interface functions in 1.6.4
+* 1.6.6 (2016-06-05): Make the default timezone UTC if tzlocal fails
+  to get the local timezone
+* 1.6.7 (2016-11-20): Add named formats "d", "day", and "dd_Mon_yyyy";
+  add named output formats "Month_Nth", "Month_Nth_YYYY",
+  "Day_Month_Nth", and "Day_Month_Nth_YYYY"
+* 1.6.8 (2016-11-21): Move documentation to readthedocs
+* 1.6.9 (2016-11-21): Fix documentation issues
+* 1.6.10 (2016-11-22): Scrub documentation: convert versions table
+  back to list; remove setup.cfg
 
 Issues
 ======
