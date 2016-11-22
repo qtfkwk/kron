@@ -1,12 +1,12 @@
 Kron Documentation
-++++++++++++++++++
++++++++++++++++++++
 
 Description
 ===========
 
 Uniform interface for dates and times
 
-.. include:: ../../README.rst
+.. include:: ../README.rst
 
 Quick start
 ===========
@@ -238,6 +238,8 @@ Versions
 +---------+------------+----------------------------------------------+
 | 1.6.8   | 2016-11-21 | Move documentation to readthedocs            |
 +---------+------------+----------------------------------------------+
+| 1.6.9   | 2016-11-21 | Fix documentation issues                     |
++---------+------------+----------------------------------------------+
 
 Issues
 ======
@@ -306,7 +308,7 @@ See also
 * Kron: `PyPI <https://pypi.python.org/pypi/kron>`_,
   `Github <https://github.com/qtfkwk/kron>`_,
   `Documentation <https://kron.readthedocs.io>`_,
-  `API Reference <https://kron.readthedocs.io/#id9>`_
+  `API Reference <https://kron.readthedocs.io/#id10>`_
 * Python built-in modules
 
     * `calendar <http://docs.python.org/library/calendar.html>`_
@@ -356,7 +358,7 @@ qtfkwk+kron@gmail.com,
 License
 =======
 
-::
+.. code-block:: text
 
     Copyright (c) 2016, qtfkwk
     All rights reserved.

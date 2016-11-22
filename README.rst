@@ -14,9 +14,12 @@ Features
 * Default timezone is local timezone
 * Comparison and arithmetic methods for timestamps and durations
 * Test-driven development methodology
-* `Named formats <https://kron.readthedocs.io/en/latest/#id10>`_
+* `Named formats <https://kron.readthedocs.io/#id10>`_
 * Timestamp object "helper" methods for timezones and formats
 * Command line tool
-* Substitutes for ``time.time()``: time, time_ntp, time_utc
+* Substitutes for ``time.time()``:
+  `time <https://kron.readthedocs.io/#id13>`_,
+  `time_ntp <https://kron.readthedocs.io/#time-ntp>`_,
+  `time_utc <https://kron.readthedocs.io/#time-utc>`_
 * Supports Python versions >= 3.5.1 and >= 2.7.11
 

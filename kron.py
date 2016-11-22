@@ -2,7 +2,7 @@
 
 # Name: kron
 # Description: Uniform interface for dates and times
-# Version: 1.6.8
+# Version: 1.6.9
 # File: kron.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
@@ -10,8 +10,8 @@
 
 """Uniform interface for dates and times
 
-* Documentation: https://pythonhosted.org/kron
-* API Reference: https://pythonhosted.org/kron/#api-reference
+* Documentation: https://kron.readthedocs.io
+* API Reference: https://kron.readthedocs.io/#id9
 """
 
 from __future__ import division
@@ -35,7 +35,7 @@ import tzlocal
 
 # Variables
 
-__version__ = '1.6.8'
+__version__ = '1.6.9'
 
 # Classes
 
