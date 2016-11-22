@@ -211,6 +211,7 @@ Versions
 * 1.6.9 (2016-11-21): Fix documentation issues
 * 1.6.10 (2016-11-22): Scrub documentation: convert versions table
   back to list; remove setup.cfg
+* 1.6.11 (2016-11-22): Fix links in README
 
 Issues
 ======

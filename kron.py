@@ -2,7 +2,7 @@
 
 # Name: kron
 # Description: Uniform interface for dates and times
-# Version: 1.6.10
+# Version: 1.6.11
 # File: kron.py
 # Author: qtfkwk <qtfkwk+kron@gmail.com>
 # Copyright: (C) 2016 by qtfkwk
@@ -35,7 +35,7 @@ import tzlocal
 
 # Variables
 
-__version__ = '1.6.10'
+__version__ = '1.6.11'
 
 # Classes
 
